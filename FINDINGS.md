@@ -171,3 +171,55 @@ EXPECTED RESULTS:
 | 14-16 | $539 | 1.0x |
 | 16-18 | $619 | 1.25x |
 
+
+## Advanced Filter Discovery
+
+### H13: Asymmetric Deltas
+Symmetric 0.15/0.15 is best. Asymmetric provides no benefit.
+
+### H14: Gap Filter (MAJOR FINDING)
+| Gap Threshold | Trades | Win Rate | Sharpe |
+|---------------|--------|----------|--------|
+| < 0.2% | 54 | 98% | 4.98 |
+| < 0.5% | 102 | 98% | 2.03 |
+
+Skipping days with large overnight gaps dramatically improves Sharpe.
+
+### H15: VIX Sweet Spot
+VIX 16-17 is optimal: 98% win rate, $672/trade average.
+
+### H16: Win Streak Sizing
+Scaling up after consecutive wins: +85% P&L with same Sharpe.
+
+## ULTRA OPTIMIZED STRATEGY (100% Win Rate)
+
+Combining all best filters:
+
+| Filter Stack | Trades | Win Rate | Sharpe |
+|--------------|--------|----------|--------|
+| VIX 16-17 + SMA20 + Gap<0.5% | 45 | **100%** | **35.17** |
+
+```
+ENTRY RULES:
+- Delta: 0.15
+- Wing: 30pt
+- DTE: 2
+
+FILTERS:
+1. VIX between 16-17
+2. Price > 20-day SMA  
+3. Overnight gap < 0.5%
+
+SIZING:
+- 1x base
+- 1.5x after 3+ wins
+- 2x after 5+ wins
+
+RESULTS (1 year backtest):
+- 45 trades, ALL WINNERS
+- $31K profit (1 contract)
+- $688/trade average
+- Sharpe: 35+
+```
+
+⚠️ **Caveat:** Small sample size (45 trades). May be overfitting. Validate with more data.
