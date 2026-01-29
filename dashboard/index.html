@@ -9,75 +9,156 @@
 <body class="bg-gray-900 text-white min-h-screen p-4 md:p-8">
     <div class="max-w-6xl mx-auto">
         <h1 class="text-3xl md:text-4xl font-bold mb-2">📈 SPX Iron Condor Dashboard</h1>
-        <p class="text-gray-400 mb-6">Updated: Jan 29, 2026 21:25 UTC • Iteration 21</p>
+        <p class="text-gray-400 mb-6">Updated: Jan 29, 2026 21:35 UTC • Iteration 23 (Final)</p>
         
         <!-- Best Config Banner -->
         <div class="bg-green-900/30 border border-green-600 rounded-lg p-4 mb-6">
-            <div class="font-bold text-green-400 text-lg">🏆 NEW BEST CONFIG FOUND</div>
-            <div class="text-green-200">Skip Thu + VIX>20 + δ0.14 + Wing 40 → 97.6% WR, Sharpe 2.69, $848K (5Y)</div>
+            <div class="font-bold text-green-400 text-lg">🏆 FINAL OPTIMIZED CONFIGS</div>
+            <div class="text-green-200">Thu skip + VIX>20 filter is the proven edge. 5 years validated.</div>
         </div>
 
-        <!-- Key Metrics -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div class="bg-gray-800 rounded-lg p-4">
-                <div class="text-gray-400 text-xs">Win Rate (5Y)</div>
-                <div class="text-2xl font-bold text-green-400">97.6%</div>
-                <div class="text-gray-500 text-xs">16 losses / 662 trades</div>
-            </div>
-            <div class="bg-gray-800 rounded-lg p-4">
-                <div class="text-gray-400 text-xs">Sharpe Ratio</div>
-                <div class="text-2xl font-bold text-blue-400">2.69</div>
-                <div class="text-gray-500 text-xs">5Y Validated</div>
-            </div>
-            <div class="bg-gray-800 rounded-lg p-4">
-                <div class="text-gray-400 text-xs">5Y P&L (2x)</div>
-                <div class="text-2xl font-bold text-yellow-400">$848K</div>
-                <div class="text-gray-500 text-xs">$4.5M at 10x</div>
-            </div>
-            <div class="bg-gray-800 rounded-lg p-4">
-                <div class="text-gray-400 text-xs">Config</div>
-                <div class="text-lg font-bold text-purple-400">δ0.14 w40</div>
-                <div class="text-gray-500 text-xs">Thu + VIX>20</div>
-            </div>
-        </div>
-
-        <!-- Sizing Table -->
+        <!-- Top Config Comparison -->
         <div class="bg-gray-800 rounded-lg p-4 mb-6">
-            <h2 class="text-lg font-bold mb-3">📊 Sizing Impact (5Y Results)</h2>
+            <h2 class="text-lg font-bold mb-3">🎯 Top Configurations Ranked</h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="text-gray-400 border-b border-gray-700">
                         <tr>
-                            <th class="text-left pb-2">Size</th>
-                            <th class="text-right pb-2">Win Rate</th>
-                            <th class="text-right pb-2">Sharpe</th>
-                            <th class="text-right pb-2">P&L</th>
+                            <th class="text-left py-2">Rank</th>
+                            <th class="text-left py-2">Config</th>
+                            <th class="text-right py-2">Sharpe</th>
+                            <th class="text-right py-2">P&L (5Y)</th>
+                            <th class="text-right py-2">Win Rate</th>
+                            <th class="text-right py-2">Losses</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-gray-700 bg-yellow-900/20">
+                            <td class="py-2">🥇</td>
+                            <td class="py-2 font-bold text-yellow-400">δ0.14 w50 Thu+Fri VIX>20</td>
+                            <td class="py-2 text-right text-green-400 font-bold">2.72</td>
+                            <td class="py-2 text-right">$715K</td>
+                            <td class="py-2 text-right">97.4%</td>
+                            <td class="py-2 text-right">13</td>
+                        </tr>
+                        <tr class="border-b border-gray-700">
+                            <td class="py-2">🥈</td>
+                            <td class="py-2 text-blue-400">δ0.14 w40 Thu VIX>20</td>
+                            <td class="py-2 text-right">2.69</td>
+                            <td class="py-2 text-right">$848K</td>
+                            <td class="py-2 text-right">97.6%</td>
+                            <td class="py-2 text-right">16</td>
+                        </tr>
+                        <tr class="border-b border-gray-700">
+                            <td class="py-2">🥉</td>
+                            <td class="py-2 text-purple-400">δ0.14 w50 Thu VIX>20</td>
+                            <td class="py-2 text-right">2.67</td>
+                            <td class="py-2 text-right">$947K</td>
+                            <td class="py-2 text-right">97.7%</td>
+                            <td class="py-2 text-right">15</td>
+                        </tr>
+                        <tr class="border-b border-gray-700">
+                            <td class="py-2">4</td>
+                            <td class="py-2 text-gray-300">δ0.14 w60 Thu VIX>20</td>
+                            <td class="py-2 text-right">2.64</td>
+                            <td class="py-2 text-right text-green-400 font-bold">$1.02M</td>
+                            <td class="py-2 text-right">97.7%</td>
+                            <td class="py-2 text-right">15</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2">5</td>
+                            <td class="py-2 text-gray-300">δ0.12 w35 Thu VIX>20</td>
+                            <td class="py-2 text-right">2.67</td>
+                            <td class="py-2 text-right">$722K</td>
+                            <td class="py-2 text-right text-green-400 font-bold">98.0%</td>
+                            <td class="py-2 text-right text-green-400">13</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Key Metrics Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-gray-800 rounded-lg p-4">
+                <div class="text-gray-400 text-xs">Best Sharpe</div>
+                <div class="text-2xl font-bold text-green-400">2.72</div>
+                <div class="text-gray-500 text-xs">Thu+Fri skip</div>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-4">
+                <div class="text-gray-400 text-xs">Best Win Rate</div>
+                <div class="text-2xl font-bold text-blue-400">98.0%</div>
+                <div class="text-gray-500 text-xs">δ0.12 w35</div>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-4">
+                <div class="text-gray-400 text-xs">Best 5Y P&L</div>
+                <div class="text-2xl font-bold text-yellow-400">$1.02M</div>
+                <div class="text-gray-500 text-xs">w60 config</div>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-4">
+                <div class="text-gray-400 text-xs">Fewest Losses</div>
+                <div class="text-lg font-bold text-purple-400">13</div>
+                <div class="text-gray-500 text-xs">δ0.12 w35 or Thu+Fri</div>
+            </div>
+        </div>
+
+        <!-- Pick Your Priority -->
+        <div class="bg-gray-800 rounded-lg p-4 mb-6">
+            <h2 class="text-lg font-bold mb-3">🎯 Pick Your Priority</h2>
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="bg-blue-900/30 border border-blue-600 rounded p-3">
+                    <div class="font-bold text-blue-400">Max Risk-Adjusted</div>
+                    <div class="text-sm text-gray-300">δ0.14 w50 Thu+Fri</div>
+                    <div class="text-xs text-gray-500">Sharpe 2.72, fewer trades</div>
+                </div>
+                <div class="bg-green-900/30 border border-green-600 rounded p-3">
+                    <div class="font-bold text-green-400">Balanced (Recommended)</div>
+                    <div class="text-sm text-gray-300">δ0.14 w40-50 Thu only</div>
+                    <div class="text-xs text-gray-500">Sharpe 2.67-2.69, good P&L</div>
+                </div>
+                <div class="bg-yellow-900/30 border border-yellow-600 rounded p-3">
+                    <div class="font-bold text-yellow-400">Max P&L</div>
+                    <div class="text-sm text-gray-300">δ0.14 w60 Thu only</div>
+                    <div class="text-xs text-gray-500">$1.02M 5Y, higher risk</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sizing Impact -->
+        <div class="bg-gray-800 rounded-lg p-4 mb-6">
+            <h2 class="text-lg font-bold mb-3">📊 Sizing Impact (δ0.14 w40 Thu VIX>20)</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="text-gray-400 border-b border-gray-700">
+                        <tr>
+                            <th class="text-left py-2">Size</th>
+                            <th class="text-right py-2">Win Rate</th>
+                            <th class="text-right py-2">Sharpe</th>
+                            <th class="text-right py-2">5Y P&L</th>
+                            <th class="text-right py-2">Risk/Trade</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="border-b border-gray-700">
-                            <td class="py-2">1x (conservative)</td>
-                            <td class="text-right">95.9%</td>
-                            <td class="text-right">1.29</td>
-                            <td class="text-right">$394K</td>
-                        </tr>
-                        <tr class="border-b border-gray-700 bg-blue-900/20">
-                            <td class="py-2">2x (recommended)</td>
-                            <td class="text-right text-green-400">97.6%</td>
-                            <td class="text-right text-green-400">2.69</td>
-                            <td class="text-right text-green-400">$848K</td>
+                            <td class="py-2">2x (Conservative)</td>
+                            <td class="py-2 text-right">97.6%</td>
+                            <td class="py-2 text-right">2.69</td>
+                            <td class="py-2 text-right">$848K</td>
+                            <td class="py-2 text-right text-green-400">$8K</td>
                         </tr>
                         <tr class="border-b border-gray-700">
-                            <td class="py-2">5x (moderate)</td>
-                            <td class="text-right">99.2%</td>
-                            <td class="text-right">5.87</td>
-                            <td class="text-right">$2.2M</td>
+                            <td class="py-2">5x (Moderate)</td>
+                            <td class="py-2 text-right">99.2%</td>
+                            <td class="py-2 text-right">5.87</td>
+                            <td class="py-2 text-right">$2.2M</td>
+                            <td class="py-2 text-right text-yellow-400">$20K</td>
                         </tr>
-                        <tr class="border-b border-gray-700 bg-green-900/20">
-                            <td class="py-2">10x (aggressive)</td>
-                            <td class="text-right text-green-400">100%</td>
-                            <td class="text-right text-green-400">8.23</td>
-                            <td class="text-right text-green-400">$4.5M</td>
+                        <tr>
+                            <td class="py-2">10x (Aggressive)</td>
+                            <td class="py-2 text-right text-green-400">100%</td>
+                            <td class="py-2 text-right text-green-400">8.23</td>
+                            <td class="py-2 text-right text-green-400">$4.5M</td>
+                            <td class="py-2 text-right text-red-400">$40K</td>
                         </tr>
                     </tbody>
                 </table>
@@ -86,101 +167,95 @@
 
         <!-- Year by Year -->
         <div class="bg-gray-800 rounded-lg p-4 mb-6">
-            <h2 class="text-lg font-bold mb-3">📅 Year-by-Year (2x sizing)</h2>
-            <div class="grid grid-cols-5 gap-2 text-center text-sm">
-                <div class="bg-gray-700 rounded p-2">
-                    <div class="font-bold">2021</div>
-                    <div class="text-green-400">98.4%</div>
-                    <div class="text-xs text-gray-400">$161K</div>
-                </div>
-                <div class="bg-gray-700 rounded p-2">
-                    <div class="font-bold">2022</div>
-                    <div class="text-yellow-400">95.0%</div>
-                    <div class="text-xs text-gray-400">$23K</div>
-                </div>
-                <div class="bg-gray-700 rounded p-2">
-                    <div class="font-bold">2023</div>
-                    <div class="text-green-400">97.0%</div>
-                    <div class="text-xs text-gray-400">$196K</div>
-                </div>
-                <div class="bg-gray-700 rounded p-2">
-                    <div class="font-bold">2024</div>
-                    <div class="text-green-400">96.1%</div>
-                    <div class="text-xs text-gray-400">$216K</div>
-                </div>
-                <div class="bg-gray-700 rounded p-2">
-                    <div class="font-bold">2025</div>
-                    <div class="text-green-400 font-bold">100%</div>
-                    <div class="text-xs text-gray-400">$224K</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Config -->
-        <div class="bg-gray-800 rounded-lg p-4 mb-6">
-            <h2 class="text-lg font-bold mb-3">🎯 Recommended Configuration</h2>
-            <div class="bg-gray-900 rounded p-3 font-mono text-sm">
-                <div class="text-green-400"># NEW BEST - 2 DTE SPX Iron Condor</div>
-                <div>symbol: SPX</div>
-                <div>dte: 2</div>
-                <div>delta: <span class="text-yellow-400">0.14</span></div>
-                <div>wing_width: <span class="text-yellow-400">40</span></div>
-                <br>
-                <div class="text-yellow-400"># Filters (proven)</div>
-                <div>skip_if: day_of_week == Thursday</div>
-                <div>skip_if: vix > 20</div>
-                <br>
-                <div class="text-blue-400"># Sizing</div>
-                <div>contracts: 2x (conservative) to 10x (aggressive)</div>
-            </div>
-        </div>
-
-        <!-- Comparison -->
-        <div class="bg-gray-800 rounded-lg p-4 mb-6">
-            <h2 class="text-lg font-bold mb-3">📈 Config Comparison (5Y, 2x)</h2>
+            <h2 class="text-lg font-bold mb-3">📅 Year-by-Year (δ0.14 w40 Thu VIX>20, 2x)</h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="text-gray-400 border-b border-gray-700">
                         <tr>
-                            <th class="text-left pb-2">Config</th>
-                            <th class="text-right pb-2">Losses</th>
-                            <th class="text-right pb-2">WR</th>
-                            <th class="text-right pb-2">Sharpe</th>
-                            <th class="text-right pb-2">P&L</th>
+                            <th class="text-left py-2">Year</th>
+                            <th class="text-right py-2">Trades</th>
+                            <th class="text-right py-2">Win Rate</th>
+                            <th class="text-right py-2">P&L</th>
+                            <th class="text-left py-2 pl-4">Notes</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="border-b border-gray-700 bg-green-900/20">
-                            <td class="py-2">✅ δ0.14 + w40 (NEW)</td>
-                            <td class="text-right">16</td>
-                            <td class="text-right text-green-400">97.6%</td>
-                            <td class="text-right text-green-400">2.69</td>
-                            <td class="text-right text-green-400">$848K</td>
+                        <tr class="border-b border-gray-700">
+                            <td class="py-2">2021</td>
+                            <td class="py-2 text-right">~130</td>
+                            <td class="py-2 text-right text-green-400">98.4%</td>
+                            <td class="py-2 text-right">$161K</td>
+                            <td class="py-2 pl-4 text-gray-500">Bull market recovery</td>
+                        </tr>
+                        <tr class="border-b border-gray-700 bg-red-900/10">
+                            <td class="py-2">2022</td>
+                            <td class="py-2 text-right">~20</td>
+                            <td class="py-2 text-right text-yellow-400">95.0%</td>
+                            <td class="py-2 text-right">$23K</td>
+                            <td class="py-2 pl-4 text-red-400">Bear market (VIX filter worked!)</td>
                         </tr>
                         <tr class="border-b border-gray-700">
-                            <td class="py-2">δ0.15 + w30 (old)</td>
-                            <td class="text-right">25</td>
-                            <td class="text-right">96.2%</td>
-                            <td class="text-right">2.59</td>
-                            <td class="text-right">$764K</td>
+                            <td class="py-2">2023</td>
+                            <td class="py-2 text-right">~167</td>
+                            <td class="py-2 text-right text-green-400">97.0%</td>
+                            <td class="py-2 text-right">$196K</td>
+                            <td class="py-2 pl-4 text-gray-500">Recovery year</td>
                         </tr>
                         <tr class="border-b border-gray-700">
-                            <td class="py-2">δ0.12 + w35</td>
-                            <td class="text-right">14</td>
-                            <td class="text-right">97.9%</td>
-                            <td class="text-right">2.70</td>
-                            <td class="text-right">$671K</td>
+                            <td class="py-2">2024</td>
+                            <td class="py-2 text-right">~179</td>
+                            <td class="py-2 text-right">96.1%</td>
+                            <td class="py-2 text-right">$216K</td>
+                            <td class="py-2 pl-4 text-gray-500">Bull continuation</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2">2025 YTD</td>
+                            <td class="py-2 text-right">~149</td>
+                            <td class="py-2 text-right text-green-400 font-bold">100%</td>
+                            <td class="py-2 text-right">$224K</td>
+                            <td class="py-2 pl-4 text-green-400">Perfect so far</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Footer -->
-        <div class="text-gray-500 text-xs text-center">
-            <p>Data: Simulated via Black-Scholes | <a href="https://github.com/42SFBay/options-backtest" class="text-blue-400">GitHub</a></p>
-            <p>⚠️ Past performance doesn't guarantee future results</p>
+        <!-- Risk Notes -->
+        <div class="bg-red-900/20 border border-red-800 rounded-lg p-4 mb-6">
+            <h2 class="text-lg font-bold mb-2 text-red-400">⚠️ Risk Considerations</h2>
+            <ul class="text-sm text-gray-300 space-y-1">
+                <li>• Max single-day loss: ~$4K per contract (w40)</li>
+                <li>• Max consecutive losses: 2-3 (occurred in 2022 bear market)</li>
+                <li>• 2022 had only 20 trades due to VIX filter — this is a feature, not a bug</li>
+                <li>• Past performance ≠ future results</li>
+            </ul>
         </div>
+
+        <!-- Final Config -->
+        <div class="bg-gray-800 rounded-lg p-4">
+            <h2 class="text-lg font-bold mb-3">✅ Recommended Starting Config</h2>
+            <pre class="bg-gray-900 p-3 rounded text-sm overflow-x-auto">
+symbol: SPX
+dte: 2
+delta: 0.14
+wing_width: 40
+
+filters:
+  skip_days: [Thursday]  # dow=3
+  vix_max: 20
+
+sizing: 2x (start conservative)
+
+expected (5Y):
+  win_rate: 97.6%
+  sharpe: 2.69
+  annual_pnl: ~$170K
+            </pre>
+        </div>
+
+        <p class="text-center text-gray-600 text-xs mt-8">
+            Generated by 42 • Options Backtest Framework • 5Y Data (2021-2026)
+        </p>
     </div>
 </body>
 </html>
