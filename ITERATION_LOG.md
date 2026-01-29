@@ -415,12 +415,54 @@ VIX 16-18 + Downtrend + Skip Thu + Skip Jan
 
 All with: Downtrend + Skip Thu + Skip Jan + 2x sizing
 
+## Iteration 14: Dynamic PT/SL Rules (21:05 UTC)
+
+**Testing with 3 DTE (where PT/SL actually triggers):**
+
+| PT/SL Config | WR | Sharpe | P&L | PT Hits | SL Hits |
+|--------------|-----|--------|-----|---------|---------|
+| 0.10/0.10 | 96.4% | 1.84 | $412K | 471 | 11 |
+| 0.15/0.15 | 95.8% | 1.77 | $412K | 466 | 12 |
+| 0.25/0.25 | 96.0% | 1.79 | $419K | 461 | 10 |
+| 0.15/0.30 (tight PT) | 96.4% | 1.79 | $416K | 466 | 8 |
+| Hold to expiry | 91.9% | 1.45 | $516K | 0 | 0 |
+
+**Dynamic PT/SL Based on Conditions:**
+
+| Strategy | WR | Sharpe | P&L |
+|----------|-----|--------|-----|
+| VIX-adaptive | 95.7% | 1.74 | $414K |
+| **Momentum-adaptive** | **96.4%** | **1.84** | **$422K** |
+| Gap-adaptive | 96.0% | 1.78 | $416K |
+| Combined | 95.7% | 1.73 | $414K |
+
+**Best Dynamic Rule: Momentum-Adaptive**
+```
+if momentum_5d < -1%:  PT=0.15, SL=0.15  (tight in downtrend)
+if momentum_5d > +1%:  PT=0.30, SL=0.40  (wide in uptrend)
+default:               PT=0.25, SL=0.30
+
+Results: 96.4% WR, Sharpe 1.84, $422K P&L
+```
+
+---
+
+## Summary: 2 DTE vs 3 DTE
+
+| DTE | Best Strategy | WR | Sharpe | Notes |
+|-----|--------------|-----|--------|-------|
+| 2 | Holy Grail (no PT/SL) | 100% | 7.51 | PT/SL never triggers |
+| 3 | Momentum-adaptive PT/SL | 96.4% | 1.84 | PT/SL matters here |
+
+**Conclusion:**
+- **2 DTE**: Use Holy Grail filters, ignore PT/SL
+- **3 DTE**: Use momentum-adaptive PT/SL
+
 ---
 
 ## Questions for Dili
 
-1. **Which variant?** Max Sharpe (δ0.10) vs Holy Grail (δ0.14) vs Max P&L (δ0.14 w35)?
-2. **Ready for paper trading?**
-3. **Sizing preference?** (5x or 10x gives more P&L with same 100% WR)
+1. **Which DTE?** 2 DTE (100% WR) vs 3 DTE (PT/SL flexibility)?
+2. **Ready to implement?**
 
 ---
