@@ -1,0 +1,47 @@
+{
+  "updated": "2026-01-29T20:03:51.403842",
+  "strategies": [
+    {
+      "name": "2x when VIX 14-18 + Skip Thu",
+      "trades": 150,
+      "win_rate": 0.9733333333333334,
+      "total_pnl": 176824.6110050269,
+      "sharpe": 2.813184599859222,
+      "status": "BEST"
+    },
+    {
+      "name": "Progressive 2x/3x sizing",
+      "trades": 150,
+      "win_rate": 0.98,
+      "total_pnl": 225832.1416217031,
+      "sharpe": 2.385985931236215,
+      "status": "HIGH P&L"
+    },
+    {
+      "name": "Combined filters (no sizing)",
+      "trades": 150,
+      "win_rate": 0.9733333333333334,
+      "total_pnl": 95174.83719131198,
+      "sharpe": 2.0740983398895048,
+      "status": "BASELINE"
+    },
+    {
+      "name": "Skip Thursday only",
+      "trades": 201,
+      "win_rate": 0.9552238805970149,
+      "total_pnl": 116782.76338189474,
+      "sharpe": 1.1007006107292676,
+      "status": "SIMPLE"
+    },
+    {
+      "name": "No filters (baseline)",
+      "trades": 249,
+      "win_rate": 0.9196787148594378,
+      "total_pnl": 126022.95656377182,
+      "sharpe": 0.7594934396817399,
+      "status": "AVOID"
+    }
+  ],
+  "best_sharpe": 2.813184599859222,
+  "best_pnl": 225832.1416217031
+}
