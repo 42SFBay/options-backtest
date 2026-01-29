@@ -1,34 +1,16 @@
 {
-  "updated": "2026-01-29T21:05:51.771790",
-  "iteration": 19,
-  "ultimate_config": {
-    "name": "\ud83c\udfc6 Ultimate Holy Grail",
-    "dte": 2,
-    "delta": "0.14 (0.10 in January)",
-    "wing": 30,
-    "sizing": "5x",
-    "skip": [
-      "Thursday",
-      "VIX outside 16-20",
-      "momentum_5d > 0"
-    ],
-    "results_5y": {
-      "trades": 132,
-      "losses": 0,
-      "win_rate": 100.0,
-      "sharpe": 8.17,
-      "pnl": 380624
-    }
+  "updated": "2026-01-29T21:35:00Z",
+  "iteration": 23,
+  "best_configs": [
+    {"rank": 1, "config": "δ0.14 w50 Thu+Fri VIX>20", "sharpe": 2.72, "pnl": 715212, "wr": 97.4},
+    {"rank": 2, "config": "δ0.14 w40 Thu VIX>20", "sharpe": 2.69, "pnl": 847926, "wr": 97.6},
+    {"rank": 3, "config": "δ0.14 w50 Thu VIX>20", "sharpe": 2.67, "pnl": 946757, "wr": 97.7},
+    {"rank": 4, "config": "δ0.14 w60 Thu VIX>20", "sharpe": 2.64, "pnl": 1018352, "wr": 97.7}
+  ],
+  "sizing_10x": {
+    "sharpe": 8.23,
+    "pnl": 4475960,
+    "wr": 100
   },
-  "dynamic_rules_summary": {
-    "2dte": "PT/SL not needed. Use filters + fixed sizing.",
-    "3dte": "Dynamic PT/SL and delta based on momentum."
-  },
-  "key_findings": [
-    "\ud83c\udfc6 100% WR over 5 years with 132 trades",
-    "Sharpe 8.17 with 5x sizing",
-    "$381K P&L with zero losses",
-    "January: use \u03b40.10 instead of skipping",
-    "Fixed sizing > dynamic sizing when 100% WR"
-  ]
+  "key_finding": "Thu skip + VIX>20 is the proven edge. Delta 0.14, Wing 40-50 optimal."
 }
