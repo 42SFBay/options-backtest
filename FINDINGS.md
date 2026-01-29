@@ -272,3 +272,39 @@ EXPECTED (5-year validated):
 - Sharpe: 1.0+
 - ~$80-100K/year per contract
 ```
+
+## Dynamic Delta Strategy (Momentum Adaptive)
+
+### How It Works
+Adjust delta based on 5-day momentum:
+- Strong uptrend (>2%): Put 0.10 / Call 0.20 (wide put, tight call)
+- Mild uptrend: Put 0.12 / Call 0.18
+- Mild downtrend: Put 0.18 / Call 0.12
+- Strong downtrend (<-2%): Put 0.20 / Call 0.10 (tight put, wide call)
+
+### Compounding Results (5-Year, $20K Start)
+
+| Risk/Trade | Final Capital | CAGR | Max Drawdown |
+|------------|---------------|------|--------------|
+| 1% | $27,799 | 6.8% | 2.2% |
+| 2% | $38,493 | 14.0% | 4.3% |
+| 3% | $53,096 | 21.6% | 6.4% |
+| 5% | $99,858 | 37.9% | 10.6% |
+| 10% | $451,757 | 86.5% | 20.8% |
+
+### Recommended Configuration
+
+**Conservative (2% risk):**
+- $20K → $38K over 5 years
+- 14% CAGR, 4.3% max drawdown
+- Sleep well at night
+
+**Balanced (5% risk):**
+- $20K → $100K over 5 years
+- 38% CAGR, 10.6% max drawdown
+- Best risk/reward ratio
+
+**Aggressive (10% risk):**
+- $20K → $452K over 5 years
+- 87% CAGR, 21% max drawdown
+- High volatility, high reward
