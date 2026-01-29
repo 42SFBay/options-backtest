@@ -5,214 +5,177 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Options Backtest Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <meta http-equiv="refresh" content="60">
+    <meta http-equiv="refresh" content="300">
 </head>
-<body class="bg-gray-900 text-white min-h-screen p-8">
-    <div class="max-w-7xl mx-auto">
-        <h1 class="text-4xl font-bold mb-2">📈 Options Backtest Dashboard</h1>
-        <p class="text-gray-400 mb-8">SPX Iron Condor Strategy • Auto-refreshes every 60s • Updated: <span id="lastUpdate">Loading...</span></p>
+<body class="bg-gray-900 text-white min-h-screen p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-bold mb-2">📈 SPX Iron Condor Dashboard</h1>
+        <p class="text-gray-400 mb-6">Updated: Jan 29, 2026 • 20 Iterations Complete</p>
         
+        <!-- Warning -->
+        <div class="bg-yellow-900/30 border border-yellow-600 rounded-lg p-4 mb-6">
+            <div class="font-bold text-yellow-400">⚠️ Overfitting Warning</div>
+            <div class="text-yellow-200 text-sm">Complex filters may be overfitting to historical data. Simpler strategies are more robust.</div>
+        </div>
+
         <!-- Key Metrics -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-gray-800 rounded-lg p-6">
-                <div class="text-gray-400 text-sm">Best Sharpe (1Y)</div>
-                <div class="text-3xl font-bold text-green-400" id="sharpe1y">4.55</div>
-                <div class="text-gray-500 text-sm">δ0.14 + 2x sizing</div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-gray-800 rounded-lg p-4">
+                <div class="text-gray-400 text-xs">ROBUST Strategy</div>
+                <div class="text-2xl font-bold text-green-400">96.2%</div>
+                <div class="text-gray-500 text-xs">Win Rate (5Y)</div>
             </div>
-            <div class="bg-gray-800 rounded-lg p-6">
-                <div class="text-gray-400 text-sm">Win Rate (1Y)</div>
-                <div class="text-3xl font-bold text-blue-400" id="winRate">99.3%</div>
-                <div class="text-gray-500 text-sm">1 loss in 150 trades</div>
+            <div class="bg-gray-800 rounded-lg p-4">
+                <div class="text-gray-400 text-xs">Sharpe Ratio</div>
+                <div class="text-2xl font-bold text-blue-400">2.59</div>
+                <div class="text-gray-500 text-xs">5Y Validated</div>
             </div>
-            <div class="bg-gray-800 rounded-lg p-6">
-                <div class="text-gray-400 text-sm">3Y Validated P&L</div>
-                <div class="text-3xl font-bold text-yellow-400" id="pnl3y">$547K</div>
-                <div class="text-gray-500 text-sm">507 trades</div>
+            <div class="bg-gray-800 rounded-lg p-4">
+                <div class="text-gray-400 text-xs">5Y P&L (2x)</div>
+                <div class="text-2xl font-bold text-yellow-400">$764K</div>
+                <div class="text-gray-500 text-xs">662 trades</div>
             </div>
-            <div class="bg-gray-800 rounded-lg p-6">
-                <div class="text-gray-400 text-sm">3Y Sharpe</div>
-                <div class="text-3xl font-bold text-purple-400" id="sharpe3y">2.57</div>
-                <div class="text-gray-500 text-sm">Validated performance</div>
+            <div class="bg-gray-800 rounded-lg p-4">
+                <div class="text-gray-400 text-xs">Total Losses</div>
+                <div class="text-2xl font-bold text-red-400">25</div>
+                <div class="text-gray-500 text-xs">of 662 trades</div>
             </div>
         </div>
 
         <!-- Strategy Comparison -->
-        <div class="bg-gray-800 rounded-lg p-6 mb-8">
-            <h2 class="text-xl font-bold mb-4">📊 Strategy Comparison</h2>
+        <div class="bg-gray-800 rounded-lg p-4 mb-6">
+            <h2 class="text-lg font-bold mb-3">📊 Strategy Comparison (5Y: 2021-2026)</h2>
             <div class="overflow-x-auto">
-                <table class="w-full text-left">
+                <table class="w-full text-sm">
                     <thead class="text-gray-400 border-b border-gray-700">
                         <tr>
-                            <th class="pb-3">Strategy</th>
-                            <th class="pb-3">1Y Sharpe</th>
-                            <th class="pb-3">3Y Sharpe</th>
-                            <th class="pb-3">3Y P&L</th>
-                            <th class="pb-3">Status</th>
+                            <th class="text-left pb-2">Strategy</th>
+                            <th class="text-right pb-2">Trades</th>
+                            <th class="text-right pb-2">Losses</th>
+                            <th class="text-right pb-2">WR</th>
+                            <th class="text-right pb-2">Sharpe</th>
+                            <th class="text-right pb-2">P&L</th>
                         </tr>
                     </thead>
-                    <tbody id="strategyTable">
+                    <tbody>
                         <tr class="border-b border-gray-700 bg-green-900/20">
-                            <td class="py-3 font-medium">δ0.14 + 2x + Skip Thu/VIX>20</td>
-                            <td class="text-green-400 font-bold">4.55</td>
-                            <td>2.57</td>
-                            <td class="text-green-400">$547,103</td>
-                            <td><span class="bg-green-500/20 text-green-400 px-2 py-1 rounded text-sm">BEST</span></td>
+                            <td class="py-2">✅ ROBUST (Thu + VIX>20)</td>
+                            <td class="text-right">662</td>
+                            <td class="text-right">25</td>
+                            <td class="text-right">96.2%</td>
+                            <td class="text-right text-green-400">2.59</td>
+                            <td class="text-right text-green-400">$764K</td>
                         </tr>
                         <tr class="border-b border-gray-700">
-                            <td class="py-3 font-medium">+ Skip January</td>
-                            <td class="text-gray-500">-</td>
-                            <td>2.76</td>
-                            <td>$501,592</td>
-                            <td><span class="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-sm">OPTIONAL</span></td>
+                            <td class="py-2">⚠️ Holy Grail (complex)</td>
+                            <td class="text-right">117</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">100%</td>
+                            <td class="text-right">7.51</td>
+                            <td class="text-right">$138K</td>
                         </tr>
-                        <tr class="border-b border-gray-700">
-                            <td class="py-3 font-medium">+ Skip Jan+Feb+Dec</td>
-                            <td class="text-gray-500">-</td>
-                            <td class="text-green-400">3.14</td>
-                            <td>$410,065</td>
-                            <td><span class="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-sm">HIGH SHARPE</span></td>
-                        </tr>
-                        <tr class="border-b border-gray-700">
-                            <td class="py-3 font-medium">Thu+Fri skip (not just Thu)</td>
-                            <td class="text-green-400">9.88</td>
-                            <td>2.54</td>
-                            <td>$413,589</td>
-                            <td><span class="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-sm">1Y LUCK</span></td>
-                        </tr>
-                        <tr class="border-b border-gray-700">
-                            <td class="py-3 font-medium text-gray-500">Old baseline (δ0.15, 1x)</td>
-                            <td class="text-gray-500">2.07</td>
-                            <td class="text-gray-500">-</td>
-                            <td class="text-gray-500">-</td>
-                            <td><span class="bg-red-500/20 text-red-400 px-2 py-1 rounded text-sm">DEPRECATED</span></td>
+                        <tr class="border-b border-gray-700 text-gray-500">
+                            <td class="py-2">❌ No filters</td>
+                            <td class="text-right">815</td>
+                            <td class="text-right">40+</td>
+                            <td class="text-right">~95%</td>
+                            <td class="text-right text-red-400">0.7</td>
+                            <td class="text-right">-</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Key Findings -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div class="bg-gray-800 rounded-lg p-6">
-                <h2 class="text-xl font-bold mb-4">✅ Key Findings</h2>
-                <ul class="space-y-3" id="findings">
-                    <li class="flex items-start">
-                        <span class="text-green-400 mr-2">•</span>
-                        <span><strong>Delta 0.14 > 0.15</strong> — Sharpe +6%</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-green-400 mr-2">•</span>
-                        <span><strong>2x sizing always</strong> — When filters pass</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-green-400 mr-2">•</span>
-                        <span><strong>Skip Thursday</strong> — Biggest single improvement</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-green-400 mr-2">•</span>
-                        <span><strong>Skip January</strong> — Free Sharpe boost (+0.19)</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-red-400 mr-2">•</span>
-                        <span><strong>0 DTE hopeless</strong> — Cannot be rescued</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-red-400 mr-2">•</span>
-                        <span><strong>PT/SL irrelevant</strong> — 2 DTE expires first</span>
-                    </li>
+        <!-- Proven Filters -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-gray-800 rounded-lg p-4">
+                <h2 class="text-lg font-bold mb-3 text-green-400">✅ Proven Filters</h2>
+                <ul class="space-y-2 text-sm">
+                    <li>• <strong>Skip Thursday</strong> — Consistent edge across all years</li>
+                    <li>• <strong>Skip VIX > 20</strong> — Reduces losses significantly</li>
+                    <li>• <strong>2 DTE optimal</strong> — Best risk/reward</li>
+                    <li>• <strong>Delta 0.15, Wing 30</strong> — Good balance</li>
                 </ul>
             </div>
-            <div class="bg-gray-800 rounded-lg p-6">
-                <h2 class="text-xl font-bold mb-4">📅 Monthly Performance (3Y)</h2>
-                <div class="space-y-4">
-                    <div>
-                        <div class="text-green-400 font-medium mb-2">Best Months (100% WR)</div>
-                        <div class="flex gap-2">
-                            <span class="bg-green-500/20 text-green-400 px-3 py-1 rounded">May</span>
-                            <span class="bg-green-500/20 text-green-400 px-3 py-1 rounded">June</span>
-                            <span class="bg-green-500/20 text-green-400 px-3 py-1 rounded">October</span>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="text-red-400 font-medium mb-2">Weak Months (~94% WR)</div>
-                        <div class="flex gap-2">
-                            <span class="bg-red-500/20 text-red-400 px-3 py-1 rounded">January</span>
-                            <span class="bg-red-500/20 text-red-400 px-3 py-1 rounded">December</span>
-                        </div>
-                    </div>
-                    <div class="text-gray-400 text-sm mt-4">
-                        Skip Jan+Feb+Dec = Sharpe 3.14 but -$137K P&L
-                    </div>
-                </div>
+            <div class="bg-gray-800 rounded-lg p-4">
+                <h2 class="text-lg font-bold mb-3 text-yellow-400">⚠️ Possibly Overfitting</h2>
+                <ul class="space-y-2 text-sm">
+                    <li>• <strong>VIX 16-20 sweet spot</strong> — Works but small sample</li>
+                    <li>• <strong>Downtrend only</strong> — May not persist</li>
+                    <li>• <strong>Skip January</strong> — Limited data</li>
+                    <li>• <strong>Complex combinations</strong> — Too many parameters</li>
+                </ul>
             </div>
         </div>
 
-        <!-- Current Rules -->
-        <div class="bg-gray-800 rounded-lg p-6 mb-8">
-            <h2 class="text-xl font-bold mb-4">🎯 Current Best Strategy</h2>
-            <div class="bg-gray-900 rounded p-4 font-mono text-sm">
-                <div class="text-green-400"># Entry Rules</div>
+        <!-- Recommended Config -->
+        <div class="bg-gray-800 rounded-lg p-4 mb-6">
+            <h2 class="text-lg font-bold mb-3">🎯 Recommended Configuration</h2>
+            <div class="bg-gray-900 rounded p-3 font-mono text-sm">
+                <div class="text-green-400"># ROBUST - Start with this</div>
                 <div>symbol: SPX</div>
-                <div>delta: <span class="text-yellow-400">0.14</span></div>
+                <div>delta: 0.15</div>
                 <div>wing_width: 30</div>
                 <div>dte: 2</div>
                 <br>
-                <div class="text-yellow-400"># Skip Conditions</div>
+                <div class="text-yellow-400"># Proven filters only</div>
                 <div>skip_if: day_of_week == Thursday</div>
                 <div>skip_if: vix > 20</div>
-                <div class="text-gray-500"># Optional: skip_if: month == January</div>
                 <br>
-                <div class="text-blue-400"># Position Sizing</div>
-                <div>contracts: <span class="text-yellow-400">2x always</span></div>
-                <br>
-                <div class="text-gray-500"># PT/SL not used (2 DTE expires before triggering)</div>
+                <div class="text-blue-400"># Sizing (based on risk tolerance)</div>
+                <div>contracts: 2x conservative, 5x moderate</div>
             </div>
         </div>
 
-        <!-- Iteration Log -->
-        <div class="bg-gray-800 rounded-lg p-6 mb-8">
-            <h2 class="text-xl font-bold mb-4">🔄 Recent Iterations</h2>
-            <div class="space-y-2 text-sm" id="iterations">
-                <div class="flex justify-between border-b border-gray-700 pb-2">
-                    <span>Iteration 8: Monthly seasonality</span>
-                    <span class="text-gray-400">Skip Jan = +0.19 Sharpe</span>
+        <!-- Year by Year -->
+        <div class="bg-gray-800 rounded-lg p-4 mb-6">
+            <h2 class="text-lg font-bold mb-3">📅 Year-by-Year (ROBUST strategy)</h2>
+            <div class="grid grid-cols-5 gap-2 text-center text-sm">
+                <div class="bg-gray-700 rounded p-2">
+                    <div class="font-bold">2021</div>
+                    <div class="text-green-400">98.4%</div>
+                    <div class="text-gray-400 text-xs">126 trades</div>
                 </div>
-                <div class="flex justify-between border-b border-gray-700 pb-2">
-                    <span>Iteration 7: Day-of-week analysis</span>
-                    <span class="text-gray-400">Thu+Fri = luck, Thu only better long-term</span>
+                <div class="bg-gray-700 rounded p-2">
+                    <div class="font-bold">2022</div>
+                    <div class="text-yellow-400">90.0%</div>
+                    <div class="text-gray-400 text-xs">20 trades</div>
                 </div>
-                <div class="flex justify-between border-b border-gray-700 pb-2">
-                    <span>Iteration 6: Multi-year validation</span>
-                    <span class="text-gray-400">3Y Sharpe 2.57, still profitable</span>
+                <div class="bg-gray-700 rounded p-2">
+                    <div class="font-bold">2023</div>
+                    <div class="text-green-400">95.8%</div>
+                    <div class="text-gray-400 text-xs">167 trades</div>
                 </div>
-                <div class="flex justify-between border-b border-gray-700 pb-2">
-                    <span>Iteration 5: Delta optimization</span>
-                    <span class="text-gray-400">0.14 beats 0.15</span>
+                <div class="bg-gray-700 rounded p-2">
+                    <div class="font-bold">2024</div>
+                    <div class="text-green-400">94.4%</div>
+                    <div class="text-gray-400 text-xs">179 trades</div>
                 </div>
-                <div class="flex justify-between border-b border-gray-700 pb-2">
-                    <span>Iteration 4: 0 DTE rescue</span>
-                    <span class="text-gray-400">Failed - cannot be saved</span>
+                <div class="bg-gray-700 rounded p-2">
+                    <div class="font-bold">2025</div>
+                    <div class="text-green-400">98.0%</div>
+                    <div class="text-gray-400 text-xs">149 trades</div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Rules -->
+        <div class="bg-gray-800 rounded-lg p-4 mb-6">
+            <h2 class="text-lg font-bold mb-3">🔄 Dynamic Rules (for 3+ DTE)</h2>
+            <p class="text-gray-400 text-sm mb-3">PT/SL doesn't trigger for 2 DTE. These rules are for 3+ DTE if you want PT/SL:</p>
+            <div class="text-sm space-y-1">
+                <div>• <strong>Downtrend (mom < -2%):</strong> PT=15%, SL=15% (tight)</div>
+                <div>• <strong>Uptrend (mom > +0.5%):</strong> PT=30%, SL=40% (wide)</div>
+                <div>• <strong>Result (3Y):</strong> 96.4% WR, Sharpe 1.85</div>
             </div>
         </div>
 
         <!-- Footer -->
-        <div class="text-gray-500 text-sm text-center">
-            <p>Data: Simulated options via Black-Scholes | GitHub: <a href="https://github.com/42SFBay/options-backtest" class="text-blue-400 hover:underline">42SFBay/options-backtest</a></p>
-            <p>⚠️ Past performance doesn't guarantee future results</p>
+        <div class="text-gray-500 text-xs text-center">
+            <p>Data: Simulated via Black-Scholes | <a href="https://github.com/42SFBay/options-backtest" class="text-blue-400">GitHub</a></p>
+            <p>⚠️ Past performance doesn't guarantee future results. Paper trade first!</p>
         </div>
     </div>
-
-    <script>
-        // Load data from JSON
-        fetch('data.json')
-            .then(r => r.json())
-            .then(data => {
-                document.getElementById('lastUpdate').textContent = new Date(data.updated).toLocaleString();
-            })
-            .catch(() => {
-                document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
-            });
-    </script>
 </body>
 </html>
