@@ -4,16 +4,18 @@
 
 ### Key Discovery: VIX Filtering is Critical
 
+**Corrected Results (1-Year Backtest, Jan 2025 - Jan 2026):**
+
 | Strategy | Trades | Win Rate | Total P&L | Avg P&L | Sharpe |
 |----------|--------|----------|-----------|---------|--------|
-| Baseline (0.15δ, 30w, 2DTE) | 249 | 92.0% | $46,126 | $185 | 0.31 |
-| + VIX ≤ 25 filter | 229 | 96.9% | $62,849 | $274 | 0.69 |
-| + VIX ≤ 20 filter | 186 | 98.4% | $57,390 | $309 | 1.32 |
-| + VIX ≤ 17 filter | 123 | 99.2% | $40,107 | $326 | **4.33** |
+| Baseline (0.15δ, 30w, 2DTE) | 249 | 92.0% | $126,023 | $506 | 0.76 |
+| + VIX ≤ 25 filter | 229 | 93.0% | $121,812 | $532 | 0.88 |
+| + VIX ≤ 20 filter | 186 | 94.6% | $107,636 | $579 | **1.22** |
+| + VIX ≤ 17 filter | 123 | 95.9% | $72,076 | $586 | 1.23 |
 
 **VIX thresholds trade off volume vs quality:**
-- VIX ≤ 20: Best total P&L ($57K), good Sharpe (1.32)
-- VIX ≤ 17: Best risk-adjusted (Sharpe 4.33), fewer trades
+- VIX ≤ 20: Best balance of P&L ($108K) and Sharpe (1.22)
+- VIX ≤ 17: Higher win rate (96%), slightly better Sharpe, but 34% fewer trades
 
 **Why VIX filtering works:**
 | VIX Range | Days | Big Moves (>1%) |
@@ -68,9 +70,9 @@ Expected Results:
 
 | Starting | Ending | Return | Max DD |
 |----------|--------|--------|--------|
-| $25,000  | $82,390 | 230% | 3.9% |
-| $50,000  | $107,390 | 115% | 2.9% |
-| $100,000 | $157,390 | 57% | 1.9% |
+| $25,000  | $132,636 | 431% | 6.7% |
+| $50,000  | $157,636 | 215% | 3.9% |
+| $100,000 | $207,636 | 108% | 2.2% |
 
 **Key observation:** April 2025 crash was completely avoided (0 trades that month due to VIX > 20).
 

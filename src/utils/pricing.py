@@ -88,16 +88,22 @@ def find_strike_by_delta(
     if option_type == 'call':
         low_K, high_K = S * 0.8, S * 1.2
         delta_func = delta_call
+        # For calls: higher K → lower delta
+        # If delta too high, increase K
+        search_direction = 1
     else:
         low_K, high_K = S * 0.8, S * 1.2
         delta_func = lambda s, k, t, r, sig: -delta_put(s, k, t, r, sig)
         target_delta = abs(target_delta)
+        # For puts: higher K → higher -delta (deeper ITM)
+        # If -delta too high, decrease K
+        search_direction = -1
     
     while high_K - low_K > precision:
         mid_K = (low_K + high_K) / 2
         mid_delta = delta_func(S, mid_K, T, r, sigma)
         
-        if mid_delta > target_delta:
+        if (mid_delta > target_delta) == (search_direction == 1):
             low_K = mid_K
         else:
             high_K = mid_K
