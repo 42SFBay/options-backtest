@@ -1,60 +1,34 @@
 {
-  "updated": "2026-01-29T21:04:15.002196",
-  "iteration": 17,
-  "strategies": {
-    "holy_grail_max_sharpe": {
-      "name": "\ud83c\udfc6 Holy Grail Max Sharpe",
-      "dte": 2,
-      "delta": 0.12,
-      "filters": "VIX 16-20, Downtrend, Skip Thu+Jan",
-      "results_5y": {
-        "trades": 117,
-        "losses": 0,
-        "win_rate": 100.0,
-        "sharpe": 11.16,
-        "pnl": 117102
-      }
-    },
-    "holy_grail_balanced": {
-      "name": "\ud83c\udfc6 Holy Grail Balanced",
-      "dte": 2,
-      "delta": 0.14,
-      "filters": "VIX 16-20, Downtrend, Skip Thu+Jan",
-      "results_5y": {
-        "trades": 117,
-        "losses": 0,
-        "win_rate": 100.0,
-        "sharpe": 7.51,
-        "pnl": 137677
-      }
-    },
-    "dynamic_3dte": {
-      "name": "\ud83d\udcca Dynamic 3 DTE",
-      "dte": 3,
-      "delta": "Momentum-adaptive (0.10/0.18 or 0.18/0.10)",
-      "ptsl": "Momentum-adaptive (0.15/0.15 or 0.30/0.40)",
-      "filters": "VIX \u226420, Skip Thu",
-      "results_3y": {
-        "trades": 506,
-        "win_rate": 97.0,
-        "sharpe": 2.02,
-        "pnl": 418423
-      }
+  "updated": "2026-01-29T21:05:51.771790",
+  "iteration": 19,
+  "ultimate_config": {
+    "name": "\ud83c\udfc6 Ultimate Holy Grail",
+    "dte": 2,
+    "delta": "0.14 (0.10 in January)",
+    "wing": 30,
+    "sizing": "5x",
+    "skip": [
+      "Thursday",
+      "VIX outside 16-20",
+      "momentum_5d > 0"
+    ],
+    "results_5y": {
+      "trades": 132,
+      "losses": 0,
+      "win_rate": 100.0,
+      "sharpe": 8.17,
+      "pnl": 380624
     }
   },
-  "dynamic_rules": {
-    "for_3dte": {
-      "delta_uptrend": "delta_put=0.10, delta_call=0.18 when momentum > +1%",
-      "delta_downtrend": "delta_put=0.18, delta_call=0.10 when momentum < -1%",
-      "ptsl_uptrend": "PT=0.30, SL=0.40 when momentum > +0.5%",
-      "ptsl_downtrend": "PT=0.15, SL=0.15 when momentum < -2%"
-    },
-    "for_2dte": "Not needed - positions expire before PT/SL triggers"
+  "dynamic_rules_summary": {
+    "2dte": "PT/SL not needed. Use filters + fixed sizing.",
+    "3dte": "Dynamic PT/SL and delta based on momentum."
   },
   "key_findings": [
-    "\ud83c\udfc6 100% Win Rate over 5 years with Holy Grail filters",
-    "Sharpe up to 11.16 with \u03b40.12",
-    "Dynamic rules best for 3+ DTE where PT/SL triggers",
-    "Momentum-adaptive delta: 97% WR, Sharpe 2.02"
+    "\ud83c\udfc6 100% WR over 5 years with 132 trades",
+    "Sharpe 8.17 with 5x sizing",
+    "$381K P&L with zero losses",
+    "January: use \u03b40.10 instead of skipping",
+    "Fixed sizing > dynamic sizing when 100% WR"
   ]
 }
