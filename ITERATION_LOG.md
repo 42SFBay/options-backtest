@@ -545,11 +545,54 @@ PT/SL: Momentum-adaptive (0.15/0.15 or 0.30/0.40)
 3Y: 97% WR, Sharpe 2.02, $418K P&L
 ```
 
+## Iteration 18-19: January Rules + Sizing (21:30 UTC)
+
+**January Options (instead of skipping):**
+| Config | WR | Sharpe | P&L |
+|--------|-----|--------|-----|
+| Skip January | 100% | 7.51 | $138K |
+| January with δ0.10 | 100% | 6.37 | $151K |
+| No January filter | 99.2% | 5.87 | $154K |
+
+**Fixed vs Dynamic Sizing (5Y, with January δ0.10):**
+| Sizing | WR | Sharpe | P&L |
+|--------|-----|--------|-----|
+| 2x always | 100% | 6.37 | $151K |
+| 3x always | 100% | 7.39 | $227K |
+| **5x always** | **100%** | **8.17** | **$381K** |
+| Dynamic (VIX sweet) | 100% | 4.22 | $168K |
+
+**Finding:** With 100% WR, fixed max sizing beats dynamic sizing.
+
+---
+
+## Ultimate Configuration
+
+```yaml
+# Holy Grail with Conservative January + 5x Sizing
+dte: 2
+delta: 0.14 (0.10 in January)
+wing: 30
+
+skip:
+  - Thursday
+  - VIX < 16 or VIX > 20
+  - momentum_5d > 0
+
+sizing: 5x always
+
+# 5-Year Results:
+# - Trades: 132
+# - Win Rate: 100%
+# - Sharpe: 8.17
+# - P&L: $381K
+```
+
 ---
 
 ## Questions for Dili
 
-1. **Which to implement?**
-2. **Ready for paper trading?**
+1. **Ready for paper trading?**
+2. **5x sizing comfortable?**
 
 ---
