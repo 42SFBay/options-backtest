@@ -1,0 +1,5 @@
+name,trades,win_rate,total_pnl,avg_pnl,max_loss,sharpe
+QQQ Baseline,249,89.2%,"$1,310",$5,$-275,0.07
+QQQ VIX≤25,229,94.8%,"$3,701",$16,$-274,0.27
+QQQ VIX≤20,186,96.8%,"$3,771",$20,$-274,0.42
+QQQ Conservative+VIX≤25,229,95.6%,"$3,525",$15,$-274,0.28
