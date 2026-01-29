@@ -82,3 +82,38 @@ Expected Results:
 2. Test entry time optimization (needs intraday data)
 3. Add live trading integration (OptionAlpha API)
 4. Correlation analysis with market regimes
+
+## Hypothesis Testing Results
+
+### H1: Delta Optimization
+- 0.15 delta optimal for risk-adjusted returns (Sharpe 1.22)
+- Lower delta = safer (0.08δ = 98% win), higher = more P&L but worse Sharpe
+
+### H2: Wing Width
+- 25-30pt wings optimal (Sharpe 1.22-1.23)
+- Wider = more premium but diminishing Sharpe
+
+### H3: DTE
+- **2 DTE is clearly optimal** (Sharpe 1.22)
+- 1 DTE too risky (Sharpe 0.55), 3+ loses edge
+
+### H4: Day-of-Week
+- Thursday notably weaker ($346/trade vs $550-680 other days)
+- Skip Friday marginal improvement, not conclusive
+
+### H5: Aggressive in Calm Markets
+- VIX ≤ 15 + 0.25δ = $929/trade, but only 26 trades/year
+- Valid secondary strategy for low-vol periods
+
+### H6: Combined Optimizations
+- Best combined: δ0.18, w35, VIX≤20 = $138K/year, Sharpe 1.13
+- But baseline δ0.15, w30 has better Sharpe (1.22)
+
+### H7: Seasonality
+- No significant monthly patterns
+- All months profitable with VIX filter
+
+### H8: Losing Streaks
+- Max consecutive losses: 2
+- Losses isolated, not clustered
+- VIX filter effectively prevents drawdowns
