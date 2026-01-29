@@ -256,6 +256,35 @@ VIX 16-20 only, Skip Thu
 3Y: $269K P&L, Sharpe 5.13, 99.1% WR
 ```
 
+## Iteration 10: SMA + Momentum Filters (21:25 UTC)
+
+**SMA Filter Tests (3Y):**
+| Filter | Trades | Win Rate | Sharpe | P&L |
+|--------|--------|----------|--------|-----|
+| Baseline | 507 | 96.6% | 2.57 | $547K |
+| Above SMA20 | 411 | 96.6% | 2.47 | $443K |
+| **Below SMA20** | 105 | 97.1% | **3.32** | $114K |
+
+**Momentum Filter Tests (3Y):**
+| Filter | Trades | Win Rate | Sharpe | P&L |
+|--------|--------|----------|--------|-----|
+| Baseline | 507 | 96.6% | 2.57 | $547K |
+| **Downtrend only** (mom<0) | 167 | **98.2%** | **2.95** | $186K |
+| Uptrend only (mom>0) | 344 | 95.9% | 2.44 | $366K |
+
+**Insight:** Trading during pullbacks (below SMA or negative momentum) has better risk-adjusted returns.
+
+---
+
+## Filter Combinations Tested
+
+| Config | Trades | WR | Sharpe | P&L |
+|--------|--------|-----|--------|-----|
+| VIX ≤20 + Thu (baseline) | 507 | 96.6% | 2.57 | $547K |
+| **VIX 16-20 + Thu** | 228 | 99.1% | **5.13** | $269K |
+| VIX ≤20 + Below SMA20 | 105 | 97.1% | 3.32 | $114K |
+| VIX 16-20 + Gap<0.5% | 184 | 98.9% | 4.66 | $215K |
+
 ---
 
 ## Questions for Dili

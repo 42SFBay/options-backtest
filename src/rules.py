@@ -204,7 +204,12 @@ class RuleEngine:
         
         # Calculate technical indicators if we have history
         try:
-            loc = prices_df.index.get_loc(dt)
+            # Handle timezone - try to find the date in the index
+            try:
+                loc = prices_df.index.get_loc(dt)
+            except KeyError:
+                # Try to find nearest match
+                loc = prices_df.index.get_indexer([dt], method='nearest')[0]
             
             # Overnight gap
             if loc > 0:

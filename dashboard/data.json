@@ -1,5 +1,6 @@
 {
-  "updated": "2026-01-29T20:51:34.656829",
+  "updated": "2026-01-29T20:53:54.744230",
+  "iteration": 10,
   "best_config": {
     "delta": 0.14,
     "wing": 30,
@@ -7,52 +8,46 @@
     "skip_days": [
       "Thursday"
     ],
-    "skip_vix_above": 20,
+    "vix_filter": "16-20 (best Sharpe) or \u226420 (best P&L)",
     "sizing": "2x always"
   },
   "variants": {
     "max_pnl": {
       "name": "Max P&L",
-      "vix_filter": "\u2264 20",
+      "filter": "VIX \u226420",
       "sharpe_3y": 2.57,
       "pnl_3y": 547103,
-      "win_rate_3y": 96.6
+      "wr_3y": 96.6
     },
     "balanced": {
       "name": "Balanced",
-      "vix_filter": "\u2264 20 + Skip Jan",
+      "filter": "VIX \u226420 + Skip Jan",
       "sharpe_3y": 2.76,
       "pnl_3y": 501592,
-      "win_rate_3y": 97.0
+      "wr_3y": 97.0
     },
     "max_sharpe": {
       "name": "Max Sharpe",
-      "vix_filter": "16-20 only",
+      "filter": "VIX 16-20",
       "sharpe_3y": 5.13,
       "pnl_3y": 269038,
-      "win_rate_3y": 99.1
+      "wr_3y": 99.1
+    },
+    "pullback": {
+      "name": "Pullback",
+      "filter": "VIX \u226420 + Below SMA20",
+      "sharpe_3y": 3.32,
+      "pnl_3y": 114490,
+      "wr_3y": 97.1
     }
-  },
-  "results_1y": {
-    "trades": 150,
-    "win_rate": 99.3,
-    "sharpe": 4.55,
-    "pnl": 184954
-  },
-  "results_3y": {
-    "trades": 507,
-    "win_rate": 96.6,
-    "sharpe": 2.57,
-    "pnl": 547103
   },
   "findings": [
     "Delta 0.14 > 0.15 (+6% Sharpe)",
     "2x sizing always when filters pass",
     "Skip Thursday = biggest improvement",
-    "VIX 16-20 band = near-perfect (99%+ WR)",
-    "Skip January = free Sharpe boost",
-    "SPX >> QQQ (3x better Sharpe)",
-    "0 DTE hopeless, PT/SL irrelevant for 2 DTE"
-  ],
-  "iteration": 9
+    "VIX 16-20 band = near-perfect (99%+ WR, Sharpe 5.13)",
+    "Below SMA20 = higher Sharpe (3.32) but fewer trades",
+    "Downtrend (mom<0) = 98.2% WR, Sharpe 2.95",
+    "SPX >> QQQ (3x better Sharpe)"
+  ]
 }
