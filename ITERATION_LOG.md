@@ -505,11 +505,51 @@ PT/SL: Momentum-adaptive (0.15/0.15 or 0.30/0.40)
 Sharpe: 2.02
 ```
 
+## Iteration 17: Dynamic Delta with 2 DTE Holy Grail (21:20 UTC)
+
+**Testing Dynamic Delta with Holy Grail Filters (5Y):**
+| Config | WR | Sharpe | P&L |
+|--------|-----|--------|-----|
+| Fixed δ0.14 | 100% | 7.51 | $138K |
+| Asymmetric (0.16/0.12) | 100% | 7.59 | $137K |
+| **Fixed δ0.12** | **100%** | **11.16** | $117K |
+| VIX-adaptive | 99.1% | 5.44 | $131K |
+
+**Finding:** For 2 DTE Holy Grail, lower fixed delta (0.12) gives best Sharpe (11.16) but less P&L.
+
+---
+
+## Final Configurations
+
+**🏆 Holy Grail 2 DTE (Max Sharpe):**
+```
+VIX 16-20, Downtrend, Skip Thu+Jan
+Delta: 0.12 (fixed)
+Wing: 30
+5Y: 100% WR, Sharpe 11.16, $117K P&L
+```
+
+**🏆 Holy Grail 2 DTE (Balanced):**
+```
+VIX 16-20, Downtrend, Skip Thu+Jan
+Delta: 0.14 (fixed)
+Wing: 30
+5Y: 100% WR, Sharpe 7.51, $138K P&L
+```
+
+**📊 Dynamic 3 DTE:**
+```
+VIX ≤20, Skip Thu
+Delta: Momentum-adaptive (0.10/0.18 or 0.18/0.10)
+PT/SL: Momentum-adaptive (0.15/0.15 or 0.30/0.40)
+3Y: 97% WR, Sharpe 2.02, $418K P&L
+```
+
 ---
 
 ## Questions for Dili
 
-1. **Which to implement?** 2 DTE (simple, 100% WR) vs 3 DTE (dynamic rules)?
+1. **Which to implement?**
 2. **Ready for paper trading?**
 
 ---
