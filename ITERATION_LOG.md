@@ -638,11 +638,45 @@ contracts: 2x (conservative) to 10x (aggressive)
 # 10x: 100% WR, Sharpe 8.23, $4.5M
 ```
 
+## Iteration 22: Wing Width Optimization (21:30 UTC)
+
+**Wing Width vs P&L/Sharpe (δ0.14, 5Y, 2x):**
+| Wing | Losses | WR | Sharpe | P&L |
+|------|--------|-----|--------|-----|
+| 40 | 16 | 97.6% | **2.69** | $848K |
+| 50 | 15 | 97.7% | 2.67 | $947K |
+| 60 | 15 | 97.7% | 2.64 | $1.02M |
+| 100 | 14 | 97.9% | 2.45 | $1.15M |
+
+**Tradeoff:** Wider wings = more P&L but lower Sharpe
+
+---
+
+## FINAL CONFIG OPTIONS
+
+**Option A: Max Sharpe**
+```
+δ0.14, w40, Thu+VIX>20
+5Y: Sharpe 2.69, $848K, 97.6% WR
+```
+
+**Option B: Balanced**
+```
+δ0.14, w50, Thu+VIX>20
+5Y: Sharpe 2.67, $947K, 97.7% WR
+```
+
+**Option C: Max P&L**
+```
+δ0.14, w60, Thu+VIX>20
+5Y: Sharpe 2.64, $1.02M, 97.7% WR
+```
+
 ---
 
 ## Questions for Dili
 
-1. **Ready for paper trading?**
-2. **Sizing preference?**
+1. **Which option?** A (max Sharpe) / B (balanced) / C (max P&L)?
+2. **Ready for paper trading?**
 
 ---
