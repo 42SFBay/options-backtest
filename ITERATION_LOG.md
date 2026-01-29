@@ -184,12 +184,39 @@ sizing: 2x
 1Y: $144K P&L, Sharpe 9.88
 ```
 
+## Iteration 8: Monthly Seasonality (21:05 UTC)
+
+**Best/Worst Months (3Y data):**
+- **100% WR**: May, June, October
+- **Lowest WR**: January (93.6%), December (94.1%)
+
+**Monthly Filter Tests (3Y):**
+| Filter | Trades | Win Rate | Sharpe | P&L |
+|--------|--------|----------|--------|-----|
+| No filter | 507 | 96.6% | 2.57 | $547K |
+| Skip Jan | 460 | 97.0% | 2.76 | $502K |
+| Skip Jan+Feb+Dec | 372 | 97.6% | 3.14 | $410K |
+| Only May-Oct | 269 | 98.1% | 3.48 | $302K |
+
+**Tradeoff**: More selective = better Sharpe but less P&L
+
+---
+
+## Summary of All Findings
+
+| Config | 1Y Sharpe | 3Y Sharpe | 3Y P&L |
+|--------|-----------|-----------|--------|
+| Base (δ0.14, 2x, Thu, VIX>20) | 4.55 | 2.57 | $547K |
+| + Skip Jan | - | 2.76 | $502K |
+| + Skip Jan+Feb+Dec | - | 3.14 | $410K |
+| + Thu+Fri (not Thu only) | 9.88 | 2.54 | $414K |
+
 ---
 
 ## Questions for Dili
 
-1. **Which config?** Thu only (more P&L) vs Thu+Fri (safer short-term)?
-2. **VIX > 20 confirmed?** Sweet spot between P&L and Sharpe
-3. **Anything else to test?**
+1. **Monthly filter?** Skip January for free Sharpe boost (2.57 → 2.76)?
+2. **Aggressive seasonality?** May-Oct only gives Sharpe 3.48 but halves P&L
+3. **Final config decision?** Need to lock one for paper trading
 
 ---
