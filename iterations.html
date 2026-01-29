@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iterations - SPX Options Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center space-x-8">
+                    <span class="text-xl font-bold">📈 SPX Backtest</span>
+                    <div class="flex space-x-4">
+                        <a href="index.html" class="text-gray-300 hover:text-white">Dashboard</a>
+                        <a href="backtests.html" class="text-gray-300 hover:text-white">Backtests</a>
+                        <a href="iterations.html" class="text-blue-400 border-b-2 border-blue-400 pb-1">Iterations</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto p-4 md:p-8">
+        <h1 class="text-3xl font-bold mb-2">🔬 Iteration Log</h1>
+        <p class="text-gray-400 mb-6">Complete history of hypothesis testing, experiments, and learnings</p>
+
+        <!-- Summary Stats -->
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <div class="bg-gray-800 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-blue-400">23</div>
+                <div class="text-gray-400 text-sm">Iterations</div>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-green-400">15+</div>
+                <div class="text-gray-400 text-sm">Configs Tested</div>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-purple-400">5</div>
+                <div class="text-gray-400 text-sm">Key Findings</div>
+            </div>
+        </div>
+
+        <!-- Key Findings Summary -->
+        <div class="bg-green-900/20 border border-green-700 rounded-lg p-4 mb-6">
+            <h2 class="text-lg font-bold text-green-400 mb-3">✅ Proven Hypotheses</h2>
+            <ul class="space-y-2 text-sm">
+                <li class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>Thursday skip improves win rate</strong> — Most impactful single filter</li>
+                <li class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>VIX > 20 protects capital</strong> — Dramatically reduced 2022 losses</li>
+                <li class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>Delta 0.14 is optimal</strong> — Better than 0.10 (too conservative) or 0.20 (too aggressive)</li>
+                <li class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>Wing 40-50 is sweet spot</strong> — Wider = more P&L but lower Sharpe</li>
+            </ul>
+        </div>
+
+        <div class="bg-red-900/20 border border-red-700 rounded-lg p-4 mb-6">
+            <h2 class="text-lg font-bold text-red-400 mb-3">❌ Rejected Hypotheses</h2>
+            <ul class="space-y-2 text-sm">
+                <li class="flex items-start"><span class="text-red-400 mr-2">✗</span><strong>Monday skip helps</strong> — No significant improvement</li>
+                <li class="flex items-start"><span class="text-red-400 mr-2">✗</span><strong>Gap filter adds value</strong> — Minimal impact on results</li>
+                <li class="flex items-start"><span class="text-red-400 mr-2">✗</span><strong>Momentum filter helps</strong> — Inconclusive, added complexity</li>
+            </ul>
+        </div>
+
+        <!-- Iteration Timeline -->
+        <h2 class="text-xl font-bold mb-4">📜 Iteration Timeline</h2>
+        
+        <div class="space-y-4">
+            <!-- Iteration 23 -->
+            <div class="bg-gray-800 rounded-lg p-4 border-l-4 border-green-500">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-green-400 font-bold">Iteration 23 — FINAL</span>
+                    <span class="text-gray-500 text-sm">Jan 29, 2026 21:35 UTC</span>
+                </div>
+                <div class="text-sm mb-2">
+                    <span class="bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-xs mr-2">VIX threshold</span>
+                    <span class="bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-xs">Day-of-week</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2"><strong>Hypothesis:</strong> Fine-tune VIX threshold and day combinations</p>
+                <p class="text-gray-400 text-sm mb-2"><strong>Result:</strong> VIX>20 with Thu skip remains optimal. Thu+Fri skip has best Sharpe (2.72) but fewer trades.</p>
+                <div class="bg-gray-900 rounded p-2 text-xs font-mono">
+                    Best Sharpe: Thu+Fri skip → 2.72 | Best P&L: w60 → $1.02M
+                </div>
+            </div>
+
+            <!-- Iteration 22 -->
+            <div class="bg-gray-800 rounded-lg p-4 border-l-4 border-purple-500">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-purple-400 font-bold">Iteration 22</span>
+                    <span class="text-gray-500 text-sm">Jan 29, 2026 21:30 UTC</span>
+                </div>
+                <div class="text-sm mb-2">
+                    <span class="bg-purple-900/50 text-purple-300 px-2 py-1 rounded text-xs">Wing optimization</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2"><strong>Hypothesis:</strong> Wider wings increase P&L without hurting win rate</p>
+                <p class="text-gray-400 text-sm mb-2"><strong>Result:</strong> Confirmed. w40→w60 increases P&L from $848K to $1.02M, but Sharpe drops from 2.69 to 2.64</p>
+                <div class="bg-gray-900 rounded p-2 text-xs font-mono">
+                    w40: $848K, Sh 2.69 | w50: $947K, Sh 2.67 | w60: $1.02M, Sh 2.64
+                </div>
+            </div>
+
+            <!-- Iteration 21 -->
+            <div class="bg-gray-800 rounded-lg p-4 border-l-4 border-yellow-500">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-yellow-400 font-bold">Iteration 21 — NEW BEST</span>
+                    <span class="text-gray-500 text-sm">Jan 29, 2026 21:25 UTC</span>
+                </div>
+                <div class="text-sm mb-2">
+                    <span class="bg-green-900/50 text-green-300 px-2 py-1 rounded text-xs">Breakthrough</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2"><strong>Hypothesis:</strong> Combine optimized delta + wing width</p>
+                <p class="text-gray-400 text-sm mb-2"><strong>Result:</strong> δ0.14 + w40 achieves best balance: 97.6% WR, Sharpe 2.69, $848K</p>
+                <div class="bg-gray-900 rounded p-2 text-xs font-mono">
+                    δ0.14 w40 Thu VIX>20: 662 trades, 16 losses, $848K
+                </div>
+            </div>
+
+            <!-- Iteration 20 -->
+            <div class="bg-gray-800 rounded-lg p-4 border-l-4 border-blue-500">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-blue-400 font-bold">Iteration 20</span>
+                    <span class="text-gray-500 text-sm">Jan 29, 2026 21:20 UTC</span>
+                </div>
+                <div class="text-sm mb-2">
+                    <span class="bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-xs">Delta sweep</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2"><strong>Hypothesis:</strong> Find optimal delta between 0.10-0.18</p>
+                <p class="text-gray-400 text-sm mb-2"><strong>Result:</strong> Delta 0.14 optimal. 0.12 has higher WR but lower P&L. 0.15+ too aggressive.</p>
+                <div class="bg-gray-900 rounded p-2 text-xs font-mono">
+                    δ0.12: 98% WR | δ0.14: 97.6% WR, best P&L | δ0.18: 95% WR
+                </div>
+            </div>
+
+            <!-- Iteration 19 -->
+            <div class="bg-gray-800 rounded-lg p-4 border-l-4 border-gray-500">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-gray-400 font-bold">Iteration 19</span>
+                    <span class="text-gray-500 text-sm">Jan 29, 2026 21:15 UTC</span>
+                </div>
+                <div class="text-sm mb-2">
+                    <span class="bg-cyan-900/50 text-cyan-300 px-2 py-1 rounded text-xs">Wing test</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2"><strong>Hypothesis:</strong> Wing width 35 vs 40 vs 50</p>
+                <p class="text-gray-400 text-sm mb-2"><strong>Result:</strong> w35 most conservative (13 losses), w50 best P&L. Trade-off confirmed.</p>
+            </div>
+
+            <!-- Iteration 18 -->
+            <div class="bg-gray-800 rounded-lg p-4 border-l-4 border-gray-500">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-gray-400 font-bold">Iteration 18</span>
+                    <span class="text-gray-500 text-sm">Jan 29, 2026 21:10 UTC</span>
+                </div>
+                <div class="text-sm mb-2">
+                    <span class="bg-orange-900/50 text-orange-300 px-2 py-1 rounded text-xs">VIX threshold</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2"><strong>Hypothesis:</strong> Test VIX thresholds 18-25</p>
+                <p class="text-gray-400 text-sm mb-2"><strong>Result:</strong> VIX>20 optimal. VIX>18 too loose (more trades but lower Sharpe). VIX>25 too strict.</p>
+            </div>
+
+            <!-- Iteration 17 -->
+            <div class="bg-gray-800 rounded-lg p-4 border-l-4 border-green-500">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-green-400 font-bold">Iteration 17 — BREAKTHROUGH</span>
+                    <span class="text-gray-500 text-sm">Jan 29, 2026 21:00 UTC</span>
+                </div>
+                <div class="text-sm mb-2">
+                    <span class="bg-green-900/50 text-green-300 px-2 py-1 rounded text-xs">Day-of-week</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2"><strong>Hypothesis:</strong> Thursday has worst performance, skip it</p>
+                <p class="text-gray-400 text-sm mb-2"><strong>Result:</strong> CONFIRMED. Thursday skip improves Sharpe from 1.93 to 2.67. Most impactful filter discovered.</p>
+                <div class="bg-gray-900 rounded p-2 text-xs font-mono">
+                    Without filter: Sharpe 1.93 | With Thu skip: Sharpe 2.67 (+38%)
+                </div>
+            </div>
+
+            <!-- Earlier iterations summary -->
+            <div class="bg-gray-800 rounded-lg p-4 border-l-4 border-gray-600">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-gray-400 font-bold">Iterations 1-16</span>
+                    <span class="text-gray-500 text-sm">Jan 29, 2026</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2"><strong>Summary:</strong> Initial framework setup, baseline testing, and preliminary filter exploration</p>
+                <ul class="text-gray-400 text-sm space-y-1">
+                    <li>• Iterations 1-5: Framework setup, data loading, basic IC simulation</li>
+                    <li>• Iterations 6-10: Baseline config testing (δ0.15, w30)</li>
+                    <li>• Iterations 11-13: VIX filter discovery (VIX>20 helps)</li>
+                    <li>• Iterations 14-16: Day-of-week analysis (Thursday worst day)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Lessons Learned -->
+        <div class="bg-gray-800 rounded-lg p-4 mt-6">
+            <h2 class="text-lg font-bold mb-3">💡 Key Lessons Learned</h2>
+            <ol class="space-y-3 text-sm text-gray-300">
+                <li>
+                    <strong class="text-white">1. Simple filters beat complex ones</strong>
+                    <p class="text-gray-400 mt-1">Day-of-week and VIX threshold outperformed momentum, gap, and multi-factor models</p>
+                </li>
+                <li>
+                    <strong class="text-white">2. The VIX filter is protective, not predictive</strong>
+                    <p class="text-gray-400 mt-1">2022 had only 20 trades because VIX stayed elevated — this saved capital during the bear market</p>
+                </li>
+                <li>
+                    <strong class="text-white">3. There's always a Sharpe vs P&L trade-off</strong>
+                    <p class="text-gray-400 mt-1">Wider wings and more trades increase total P&L but reduce risk-adjusted returns</p>
+                </li>
+                <li>
+                    <strong class="text-white">4. Year-by-year validation is essential</strong>
+                    <p class="text-gray-400 mt-1">A strategy that works in aggregate might fail in specific market regimes — check 2022 performance</p>
+                </li>
+                <li>
+                    <strong class="text-white">5. 97%+ win rate is achievable with proper filtering</strong>
+                    <p class="text-gray-400 mt-1">But it comes with trade-offs: fewer opportunities and occasional big losses</p>
+                </li>
+            </ol>
+        </div>
+
+        <p class="text-center text-gray-600 text-xs mt-8">
+            Generated by 42 • Options Backtest Framework
+        </p>
+    </div>
+</body>
+</html>
