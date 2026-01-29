@@ -117,3 +117,57 @@ Expected Results:
 - Max consecutive losses: 2
 - Losses isolated, not clustered
 - VIX filter effectively prevents drawdowns
+
+## Exit Strategy Analysis
+
+Tested profit targets (PT) and stop losses (SL) on various DTEs:
+
+| Strategy | Win Rate | P&L | Sharpe |
+|----------|----------|-----|--------|
+| Hold to expiry | 89% | $90K | 0.59 |
+| PT 50% + SL 1x | 90% | $69K | 0.63 |
+
+**Conclusion:** Exit rules provide marginal improvement. On 2 DTE, positions resolve too fast for exits to trigger meaningfully.
+
+## Advanced Filters
+
+### Trend Direction (SMA Filter) - KEY FINDING
+| Condition | Win Rate | Sharpe |
+|-----------|----------|--------|
+| Above SMA20 | 96% | 1.19 |
+| Below SMA20 | 92% | 2.67* |
+*Low sample (13 trades)
+
+### Optimized Filter Stack
+| Filters | Trades | Win Rate | Sharpe |
+|---------|--------|----------|--------|
+| VIX≤20 only | 137 | 96% | 1.24 |
+| VIX≤17 + SMA20 | 102 | **97%** | **1.41** |
+| VIX≤20 + SMA10 | 109 | 96% | 1.35 |
+
+## Final Optimized Strategy
+
+```
+SPX Iron Condor
+Delta: 0.15
+Wing: 30 points  
+DTE: 2 days
+
+FILTERS:
+1. VIX ≤ 17
+2. Price > 20-day SMA
+
+EXPECTED RESULTS:
+- Win Rate: 97%
+- Sharpe: 1.41
+- ~102 trades/year
+- ~$62K annual P&L (1 contract)
+```
+
+### VIX-Based Position Sizing
+| VIX Range | Avg P&L | Suggested Size |
+|-----------|---------|----------------|
+| <14 | $689 | 1.5x |
+| 14-16 | $539 | 1.0x |
+| 16-18 | $619 | 1.25x |
+
