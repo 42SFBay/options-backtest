@@ -1,73 +1,48 @@
 {
-  "updated": "2026-01-29T20:57:39.631126",
-  "iteration": 12,
+  "updated": "2026-01-29T21:01:30.327816",
+  "iteration": 14,
   "strategies": {
-    "holy_grail_5x": {
-      "name": "\ud83c\udfc6 Holy Grail (5x)",
-      "config": "VIX 16-20, Downtrend, Skip Thu+Jan, 5x sizing",
+    "holy_grail_2dte": {
+      "name": "\ud83c\udfc6 Holy Grail (2 DTE)",
+      "dte": 2,
+      "config": "VIX 16-20, Downtrend, Skip Thu (no PT/SL needed)",
       "results_5y": {
         "trades": 117,
         "losses": 0,
         "win_rate": 100.0,
-        "sharpe": 12.01,
-        "pnl": 348377
+        "sharpe": 7.51,
+        "pnl": 137677
       }
     },
-    "max_pnl": {
-      "name": "\ud83d\udcb0 Max P&L",
-      "config": "VIX 16-20, Any momentum, Skip Thu+Jan, 2x",
-      "results_5y": {
-        "trades": 338,
-        "losses": 4,
-        "win_rate": 98.8,
-        "sharpe": 4.31,
-        "pnl": 387548
-      }
-    },
-    "max_sharpe": {
-      "name": "\u26a1 Max Sharpe",
-      "config": "VIX 16-18, Downtrend, Skip Thu+Jan, 2x",
-      "results_5y": {
-        "trades": 55,
-        "losses": 0,
-        "win_rate": 100.0,
-        "sharpe": 10.83,
-        "pnl": 64959
+    "dynamic_ptsl_3dte": {
+      "name": "\ud83d\udcca Dynamic PT/SL (3 DTE)",
+      "dte": 3,
+      "config": "Momentum-adaptive: 0.15/0.15 down, 0.30/0.40 up",
+      "results_3y": {
+        "trades": 506,
+        "win_rate": 96.4,
+        "sharpe": 1.84,
+        "pnl": 421662
       }
     }
   },
-  "holy_grail_yearly": {
-    "2021": {
-      "trades": 27,
-      "wr": 100,
-      "pnl": 77702
-    },
-    "2022": {
-      "trades": 1,
-      "wr": 100,
-      "pnl": 2373
-    },
-    "2023": {
-      "trades": 35,
-      "wr": 100,
-      "pnl": 97231
-    },
-    "2024": {
-      "trades": 26,
-      "wr": 100,
-      "pnl": 81275
-    },
-    "2025": {
-      "trades": 26,
-      "wr": 100,
-      "pnl": 83403
+  "dynamic_rules": {
+    "momentum_adaptive": {
+      "downtrend": {
+        "condition": "momentum_5d < -1%",
+        "pt": 0.15,
+        "sl": 0.15
+      },
+      "uptrend": {
+        "condition": "momentum_5d > +1%",
+        "pt": 0.3,
+        "sl": 0.4
+      },
+      "default": {
+        "pt": 0.25,
+        "sl": 0.3
+      }
     }
   },
-  "findings": [
-    "\ud83c\udfc6 100% WIN RATE OVER 5 YEARS CONFIRMED",
-    "Holy Grail: VIX 16-20 + Downtrend + Thu/Jan skip",
-    "5x sizing \u2192 \u00048K P&L with ZERO losses",
-    "10x sizing \u2192 \u0000K P&L with ZERO losses",
-    "Max Sharpe 10.83 with tighter VIX 16-18"
-  ]
+  "key_insight": "2 DTE: PT/SL never triggers (use filters). 3 DTE: PT/SL matters (use dynamic rules)."
 }
