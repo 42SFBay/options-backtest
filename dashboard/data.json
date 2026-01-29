@@ -1,11 +1,25 @@
 {
-  "updated": "2026-01-29T21:01:30.327816",
-  "iteration": 14,
+  "updated": "2026-01-29T21:04:15.002196",
+  "iteration": 17,
   "strategies": {
-    "holy_grail_2dte": {
-      "name": "\ud83c\udfc6 Holy Grail (2 DTE)",
+    "holy_grail_max_sharpe": {
+      "name": "\ud83c\udfc6 Holy Grail Max Sharpe",
       "dte": 2,
-      "config": "VIX 16-20, Downtrend, Skip Thu (no PT/SL needed)",
+      "delta": 0.12,
+      "filters": "VIX 16-20, Downtrend, Skip Thu+Jan",
+      "results_5y": {
+        "trades": 117,
+        "losses": 0,
+        "win_rate": 100.0,
+        "sharpe": 11.16,
+        "pnl": 117102
+      }
+    },
+    "holy_grail_balanced": {
+      "name": "\ud83c\udfc6 Holy Grail Balanced",
+      "dte": 2,
+      "delta": 0.14,
+      "filters": "VIX 16-20, Downtrend, Skip Thu+Jan",
       "results_5y": {
         "trades": 117,
         "losses": 0,
@@ -14,35 +28,33 @@
         "pnl": 137677
       }
     },
-    "dynamic_ptsl_3dte": {
-      "name": "\ud83d\udcca Dynamic PT/SL (3 DTE)",
+    "dynamic_3dte": {
+      "name": "\ud83d\udcca Dynamic 3 DTE",
       "dte": 3,
-      "config": "Momentum-adaptive: 0.15/0.15 down, 0.30/0.40 up",
+      "delta": "Momentum-adaptive (0.10/0.18 or 0.18/0.10)",
+      "ptsl": "Momentum-adaptive (0.15/0.15 or 0.30/0.40)",
+      "filters": "VIX \u226420, Skip Thu",
       "results_3y": {
         "trades": 506,
-        "win_rate": 96.4,
-        "sharpe": 1.84,
-        "pnl": 421662
+        "win_rate": 97.0,
+        "sharpe": 2.02,
+        "pnl": 418423
       }
     }
   },
   "dynamic_rules": {
-    "momentum_adaptive": {
-      "downtrend": {
-        "condition": "momentum_5d < -1%",
-        "pt": 0.15,
-        "sl": 0.15
-      },
-      "uptrend": {
-        "condition": "momentum_5d > +1%",
-        "pt": 0.3,
-        "sl": 0.4
-      },
-      "default": {
-        "pt": 0.25,
-        "sl": 0.3
-      }
-    }
+    "for_3dte": {
+      "delta_uptrend": "delta_put=0.10, delta_call=0.18 when momentum > +1%",
+      "delta_downtrend": "delta_put=0.18, delta_call=0.10 when momentum < -1%",
+      "ptsl_uptrend": "PT=0.30, SL=0.40 when momentum > +0.5%",
+      "ptsl_downtrend": "PT=0.15, SL=0.15 when momentum < -2%"
+    },
+    "for_2dte": "Not needed - positions expire before PT/SL triggers"
   },
-  "key_insight": "2 DTE: PT/SL never triggers (use filters). 3 DTE: PT/SL matters (use dynamic rules)."
+  "key_findings": [
+    "\ud83c\udfc6 100% Win Rate over 5 years with Holy Grail filters",
+    "Sharpe up to 11.16 with \u03b40.12",
+    "Dynamic rules best for 3+ DTE where PT/SL triggers",
+    "Momentum-adaptive delta: 97% WR, Sharpe 2.02"
+  ]
 }
