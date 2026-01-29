@@ -64,10 +64,19 @@ Expected Results:
 - Slippage not included
 - For production: need ThetaData or OptionsDX for actual historical chains
 
+## Account Simulation (VIX ≤ 20, 2% Risk/Trade)
+
+| Starting | Ending | Return | Max DD |
+|----------|--------|--------|--------|
+| $25,000  | $82,390 | 230% | 3.9% |
+| $50,000  | $107,390 | 115% | 2.9% |
+| $100,000 | $157,390 | 57% | 1.9% |
+
+**Key observation:** April 2025 crash was completely avoided (0 trades that month due to VIX > 20).
+
 ## Next Steps
 
-1. Get real historical options data
-2. Test entry time optimization
-3. Add trend day detection
-4. Build position sizing based on account size
-5. Add live trading integration
+1. Get real historical options data (ThetaData/OptionsDX)
+2. Test entry time optimization (needs intraday data)
+3. Add live trading integration (OptionAlpha API)
+4. Correlation analysis with market regimes
