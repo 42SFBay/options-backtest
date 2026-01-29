@@ -338,12 +338,60 @@ FILTERS:
 - **Conservative (Holy Grail)**: 117 trades/5Y, $138K, 100% WR
 - **Max P&L**: 662 trades/5Y, $713K, 96.8% WR
 
+## Iteration 12: Optimizing the Holy Grail (21:45 UTC)
+
+**Variations Tested (5Y):**
+| Config | Trades | Losses | WR | Sharpe | P&L |
+|--------|--------|--------|-----|--------|-----|
+| **Holy Grail** | 117 | 0 | 100% | 7.51 | $138K |
+| Tighter (VIX 16-18) | 55 | 0 | 100% | **10.83** | $65K |
+| Wider (VIX 15-20) | 137 | 1 | 99.3% | 5.78 | $160K |
+| No Jan skip | 132 | 1 | 99.2% | 5.87 | $154K |
+| Any momentum | 338 | 4 | 98.8% | 4.31 | **$388K** |
+
+**Scaling Tests (5Y, Holy Grail):**
+| Sizing | Sharpe | P&L |
+|--------|--------|-----|
+| 1x | 4.25 | $67K |
+| 2x | 7.51 | $138K |
+| 5x | 12.01 | $348K |
+| 10x | 13.94 | $700K |
+
+**Year-by-Year (5x, Holy Grail):**
+- 2021: 27 trades, 100% WR, $78K
+- 2022: 1 trade, 100% WR, $2K
+- 2023: 35 trades, 100% WR, $97K
+- 2024: 26 trades, 100% WR, $81K
+- 2025: 26 trades, 100% WR, $83K
+
+---
+
+## Final Strategy Options
+
+### 🏆 Holy Grail (Conservative)
+```
+VIX 16-20 + Downtrend + Skip Thu + Skip Jan
+5x sizing → $348K/5Y, 100% WR, Sharpe 12.01
+```
+
+### 💰 Max P&L (Aggressive)
+```
+VIX 16-20 + Skip Thu + Skip Jan (any momentum)
+2x sizing → $388K/5Y, 98.8% WR, Sharpe 4.31
+```
+
+### ⚡ Max Sharpe (Ultra Conservative)
+```
+VIX 16-18 + Downtrend + Skip Thu + Skip Jan
+2x sizing → $65K/5Y, 100% WR, Sharpe 10.83
+```
+
 ---
 
 ## Questions for Dili
 
-1. **Ready for paper trading with Holy Grail config?**
-2. **Or prefer Max P&L with some losses?**
-3. **Want to size up (3x, 4x) given 100% win rate?**
+1. **Which config for paper trading?**
+2. **What sizing level?** (5x Holy Grail matches Max P&L but with 100% WR)
+3. **Ready to implement?**
 
 ---
