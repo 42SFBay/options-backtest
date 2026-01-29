@@ -138,12 +138,58 @@ sizing: 2x always
 - P&L: $185K (2 contracts)
 ```
 
+## Iteration 7: VIX Thresholds + Day-of-Week (21:00 UTC)
+
+**VIX Skip Threshold:**
+| Threshold | Trades | Win Rate | Sharpe |
+|-----------|--------|----------|--------|
+| VIX > 17 | 96 | 99.0% | 4.03 |
+| VIX > 18 | 122 | 99.2% | 4.22 |
+| VIX > 19 | 139 | 99.3% | 4.46 |
+| **VIX > 20** | 150 | 99.3% | **4.55** |
+| VIX > 22 | 170 | 98.2% | 2.96 |
+
+**Day-of-Week Skip (1-Year):**
+| Skip | Trades | Win Rate | Sharpe |
+|------|--------|----------|--------|
+| Thu only | 150 | 99.3% | 4.55 |
+| **Thu+Fri** | 115 | **100%** | **9.88** |
+
+**BUT Multi-Year Tells Different Story:**
+| Period | Thu Only | Thu+Fri |
+|--------|----------|---------|
+| 1Y P&L | $185K | $144K |
+| 5Y P&L | $713K | $536K |
+| 5Y Sharpe | 2.65 | 2.58 |
+
+**Conclusion:** Thu+Fri's 100% in 1Y was luck. Long-term, Thu only = more P&L, similar Sharpe.
+
+---
+
+## Current Best Configs
+
+**For Max P&L (Thu only):**
+```
+delta: 0.14, wing: 30, dte: 2
+skip: Thursday, VIX > 20
+sizing: 2x
+5Y: $713K P&L, Sharpe 2.65
+```
+
+**For Max Short-Term Sharpe (Thu+Fri):**
+```
+delta: 0.14, wing: 30, dte: 2
+skip: Thursday, Friday, VIX > 20
+sizing: 2x
+1Y: $144K P&L, Sharpe 9.88
+```
+
 ---
 
 ## Questions for Dili
 
-1. **2x baseline sizing?** Results support always using 2x when filters pass
-2. **Delta 0.14 accepted?** Consistently better than 0.15
-3. **Longer validation needed?** 3-year shows degradation but still profitable
+1. **Which config?** Thu only (more P&L) vs Thu+Fri (safer short-term)?
+2. **VIX > 20 confirmed?** Sweet spot between P&L and Sharpe
+3. **Anything else to test?**
 
 ---
