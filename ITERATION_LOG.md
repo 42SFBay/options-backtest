@@ -458,11 +458,58 @@ Results: 96.4% WR, Sharpe 1.84, $422K P&L
 - **2 DTE**: Use Holy Grail filters, ignore PT/SL
 - **3 DTE**: Use momentum-adaptive PT/SL
 
+## Iteration 16: Dynamic Delta + Combined Rules (21:10 UTC)
+
+**Dynamic Delta Based on Momentum (3 DTE, 3Y):**
+| Config | WR | Sharpe | P&L |
+|--------|-----|--------|-----|
+| Fixed δ0.14 | 95.8% | 1.77 | $412K |
+| **Momentum-adaptive delta** | **97.0%** | **2.02** | $418K |
+| VIX-adaptive delta | 95.8% | 1.79 | $427K |
+
+**Best Dynamic Delta Rule:**
+```
+if momentum_5d > +1%:  delta_put=0.10, delta_call=0.18 (widen put)
+if momentum_5d < -1%:  delta_put=0.18, delta_call=0.10 (widen call)
+default:               delta=0.14 symmetric
+```
+
+**Combined Dynamic Rules (Delta + PT/SL):**
+- WR: 96.6%
+- Sharpe: 1.92
+- P&L: $423K
+
+**Rule Application Counts (3Y):**
+- uptrend_ptsl: 373 days
+- uptrend_delta: 284 days
+- downtrend_delta: 151 days
+- downtrend_ptsl: 79 days
+
+---
+
+## Final Dynamic Rules Summary
+
+**For 2 DTE (100% WR strategy):**
+```
+Skip: Thursday, VIX > 20, momentum > 0, January
+Delta: 0.14 symmetric
+PT/SL: Not needed (expires first)
+Sharpe: 7.51+
+```
+
+**For 3 DTE (dynamic PT/SL + delta):**
+```
+Skip: Thursday, VIX > 20
+Delta: Momentum-adaptive (0.10/0.18 or 0.18/0.10)
+PT/SL: Momentum-adaptive (0.15/0.15 or 0.30/0.40)
+Sharpe: 2.02
+```
+
 ---
 
 ## Questions for Dili
 
-1. **Which DTE?** 2 DTE (100% WR) vs 3 DTE (PT/SL flexibility)?
-2. **Ready to implement?**
+1. **Which to implement?** 2 DTE (simple, 100% WR) vs 3 DTE (dynamic rules)?
+2. **Ready for paper trading?**
 
 ---
