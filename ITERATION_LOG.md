@@ -211,12 +211,57 @@ sizing: 2x
 | + Skip Jan+Feb+Dec | - | 3.14 | $410K |
 | + Thu+Fri (not Thu only) | 9.88 | 2.54 | $414K |
 
+## Iteration 9: VIX Band Discovery (21:15 UTC)
+
+**MAJOR FINDING: VIX 16-20 band = near-perfect win rate**
+
+| Period | VIX 16-20 | Baseline (≤20) |
+|--------|-----------|----------------|
+| 1Y WR | **100%** | 99.3% |
+| 1Y Sharpe | **8.46** | 4.55 |
+| 1Y P&L | $122K | $185K |
+| 3Y WR | **99.1%** | 96.6% |
+| 3Y Sharpe | **5.13** | 2.57 |
+| 3Y P&L | $269K | $547K |
+
+**Interpretation:**
+- VIX 16-20 is the "sweet spot" - elevated but not dangerous
+- Trade fewer times but with near-certainty
+- 2x Sharpe but ~50% P&L
+
+**SPX vs QQQ:**
+- SPX: Sharpe 4.55, P&L $185K
+- QQQ: Sharpe 1.52, P&L $20K
+- **SPX wins decisively**
+
+---
+
+## Three Strategy Variants
+
+**1. MAX P&L (Baseline)**
+```
+VIX ≤ 20, Skip Thu
+3Y: $547K P&L, Sharpe 2.57, 96.6% WR
+```
+
+**2. BALANCED (Skip January)**
+```
+VIX ≤ 20, Skip Thu + January
+3Y: $502K P&L, Sharpe 2.76, 97.0% WR
+```
+
+**3. MAX SHARPE (VIX 16-20 only)**
+```
+VIX 16-20 only, Skip Thu
+3Y: $269K P&L, Sharpe 5.13, 99.1% WR
+```
+
 ---
 
 ## Questions for Dili
 
-1. **Monthly filter?** Skip January for free Sharpe boost (2.57 → 2.76)?
-2. **Aggressive seasonality?** May-Oct only gives Sharpe 3.48 but halves P&L
-3. **Final config decision?** Need to lock one for paper trading
+1. **Which variant?** Max P&L vs Balanced vs Max Sharpe?
+2. **VIX 16-20 for conservative mode?** Near-perfect but less trades
+3. **Ready for paper trading?**
 
 ---

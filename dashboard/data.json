@@ -1,5 +1,5 @@
 {
-  "updated": "2026-01-29T20:49:26.435490",
+  "updated": "2026-01-29T20:51:34.656829",
   "best_config": {
     "delta": 0.14,
     "wing": 30,
@@ -9,6 +9,29 @@
     ],
     "skip_vix_above": 20,
     "sizing": "2x always"
+  },
+  "variants": {
+    "max_pnl": {
+      "name": "Max P&L",
+      "vix_filter": "\u2264 20",
+      "sharpe_3y": 2.57,
+      "pnl_3y": 547103,
+      "win_rate_3y": 96.6
+    },
+    "balanced": {
+      "name": "Balanced",
+      "vix_filter": "\u2264 20 + Skip Jan",
+      "sharpe_3y": 2.76,
+      "pnl_3y": 501592,
+      "win_rate_3y": 97.0
+    },
+    "max_sharpe": {
+      "name": "Max Sharpe",
+      "vix_filter": "16-20 only",
+      "sharpe_3y": 5.13,
+      "pnl_3y": 269038,
+      "win_rate_3y": 99.1
+    }
   },
   "results_1y": {
     "trades": 150,
@@ -22,58 +45,14 @@
     "sharpe": 2.57,
     "pnl": 547103
   },
-  "strategies": [
-    {
-      "name": "\u03b40.14 + 2x + Skip Thu/VIX>20",
-      "sharpe_1y": 4.55,
-      "sharpe_3y": 2.57,
-      "pnl_3y": 547103,
-      "status": "BEST"
-    },
-    {
-      "name": "+ Skip January",
-      "sharpe_1y": null,
-      "sharpe_3y": 2.76,
-      "pnl_3y": 501592,
-      "status": "OPTIONAL"
-    },
-    {
-      "name": "+ Skip Jan+Feb+Dec",
-      "sharpe_1y": null,
-      "sharpe_3y": 3.14,
-      "pnl_3y": 410065,
-      "status": "HIGH SHARPE"
-    },
-    {
-      "name": "Thu+Fri skip",
-      "sharpe_1y": 9.88,
-      "sharpe_3y": 2.54,
-      "pnl_3y": 413589,
-      "status": "LUCK"
-    },
-    {
-      "name": "Old baseline (\u03b40.15)",
-      "sharpe_1y": 2.81,
-      "sharpe_3y": null,
-      "pnl_3y": null,
-      "status": "DEPRECATED"
-    }
-  ],
   "findings": [
-    "Delta 0.14 beats 0.15 (Sharpe +6%)",
+    "Delta 0.14 > 0.15 (+6% Sharpe)",
     "2x sizing always when filters pass",
-    "Skip Thursday = biggest single improvement",
+    "Skip Thursday = biggest improvement",
+    "VIX 16-20 band = near-perfect (99%+ WR)",
     "Skip January = free Sharpe boost",
-    "0 DTE cannot be rescued",
-    "PT/SL irrelevant for 2 DTE"
+    "SPX >> QQQ (3x better Sharpe)",
+    "0 DTE hopeless, PT/SL irrelevant for 2 DTE"
   ],
-  "monthly_best": [
-    "May",
-    "June",
-    "October"
-  ],
-  "monthly_worst": [
-    "January",
-    "December"
-  ]
+  "iteration": 9
 }
