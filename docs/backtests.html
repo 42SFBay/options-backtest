@@ -6,20 +6,12 @@
     <title>Backtests - SPX Options Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .tooltip { position: relative; }
-        .tooltip:hover::after {
-            content: attr(data-tip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1f2937;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            white-space: nowrap;
-            z-index: 10;
-        }
+        .config-row { cursor: pointer; }
+        .config-row:hover { background: rgba(59, 130, 246, 0.1); }
+        .monthly-detail { display: none; }
+        .monthly-detail.active { display: table-row; }
+        .expand-icon { transition: transform 0.2s; }
+        .config-row.expanded .expand-icon { transform: rotate(90deg); }
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
@@ -41,33 +33,34 @@
 
     <div class="max-w-7xl mx-auto p-4 md:p-8">
         <h1 class="text-3xl font-bold mb-2">📊 All Backtest Results</h1>
-        <p class="text-gray-400 mb-6">Complete metrics for every tested configuration (5Y: 2021-2026, 1255 trading days)</p>
+        <p class="text-gray-400 mb-4">Click any configuration to see monthly breakdown • 5Y: 2021-2026, 1255 trading days</p>
 
         <!-- Legend -->
         <div class="bg-gray-800 rounded-lg p-4 mb-6">
             <h3 class="font-bold mb-2">📖 Metric Definitions</h3>
-            <div class="grid md:grid-cols-3 gap-2 text-sm text-gray-400">
-                <div><span class="text-white">Total P&L:</span> Net profit over 5 years</div>
-                <div><span class="text-white">Avg P&L:</span> Average profit per trade</div>
-                <div><span class="text-white">Avg Win:</span> Average winning trade $</div>
-                <div><span class="text-white">Avg Loss:</span> Average losing trade $</div>
-                <div><span class="text-white">Max DD:</span> Maximum drawdown (peak to trough)</div>
-                <div><span class="text-white">Reward/Risk:</span> Avg Win ÷ Avg Loss</div>
-                <div><span class="text-white">Avg Risk:</span> Average max risk per trade</div>
-                <div><span class="text-white">Filtered:</span> Days skipped by filters</div>
-                <div><span class="text-white">Sharpe:</span> Risk-adjusted return ratio</div>
+            <div class="grid md:grid-cols-4 gap-2 text-sm text-gray-400">
+                <div><span class="text-white"># Contracts:</span> Position size</div>
+                <div><span class="text-white">Total P&L:</span> Net profit (5Y)</div>
+                <div><span class="text-white">Avg P&L:</span> Per trade average</div>
+                <div><span class="text-white">Avg Win/Loss:</span> Avg $ per outcome</div>
+                <div><span class="text-white">Max DD:</span> Peak to trough</div>
+                <div><span class="text-white">R:R:</span> Reward/Risk ratio</div>
+                <div><span class="text-white">Risk/Trade:</span> Max loss exposure</div>
+                <div><span class="text-white">Filtered:</span> Days skipped</div>
             </div>
         </div>
 
         <!-- Main Comparison Table -->
         <div class="bg-gray-800 rounded-lg p-4 mb-6 overflow-x-auto">
-            <h2 class="text-xl font-bold mb-4">🎯 Configuration Comparison</h2>
-            <table class="w-full text-sm min-w-[1200px]">
+            <h2 class="text-xl font-bold mb-4">🎯 Configuration Comparison <span class="text-sm font-normal text-gray-400">(click row for monthly details)</span></h2>
+            <table class="w-full text-sm min-w-[1400px]" id="configTable">
                 <thead class="text-gray-400 border-b border-gray-700">
                     <tr>
+                        <th class="text-left py-2 px-2 w-8"></th>
                         <th class="text-left py-2 px-2">ID</th>
                         <th class="text-left py-2 px-2">Configuration</th>
                         <th class="text-left py-2 px-2">Hypothesis</th>
+                        <th class="text-right py-2 px-2"># Cont</th>
                         <th class="text-right py-2 px-2">Trades</th>
                         <th class="text-right py-2 px-2">Wins</th>
                         <th class="text-right py-2 px-2">Losses</th>
@@ -78,20 +71,20 @@
                         <th class="text-right py-2 px-2">Avg Loss</th>
                         <th class="text-right py-2 px-2">R:R</th>
                         <th class="text-right py-2 px-2">Max DD</th>
+                        <th class="text-right py-2 px-2">Risk/Trade</th>
                         <th class="text-right py-2 px-2">Sharpe</th>
-                        <th class="text-right py-2 px-2">Filtered</th>
-                        <th class="text-right py-2 px-2">Avg Risk</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Config 1: Best Sharpe -->
-                    <tr id="config-1" class="border-b border-gray-700 bg-yellow-900/10">
+                    <tr class="config-row border-b border-gray-700 bg-yellow-900/10" data-config="1" onclick="toggleMonthly(1)">
+                        <td class="py-3 px-2"><span class="expand-icon text-gray-400">▶</span></td>
                         <td class="py-3 px-2 font-bold">🥇</td>
                         <td class="py-3 px-2">
                             <div class="font-bold text-yellow-400">δ0.14 w50 Thu+Fri VIX>20</div>
-                            <div class="text-xs text-gray-500">Skip Thu & Fri, max VIX 20</div>
                         </td>
-                        <td class="py-3 px-2"><span class="bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-xs">Day-of-week edge</span></td>
+                        <td class="py-3 px-2"><span class="bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-xs">Day-of-week</span></td>
+                        <td class="py-3 px-2 text-right">10</td>
                         <td class="py-3 px-2 text-right">499</td>
                         <td class="py-3 px-2 text-right text-green-400">486</td>
                         <td class="py-3 px-2 text-right text-red-400">13</td>
@@ -102,18 +95,60 @@
                         <td class="py-3 px-2 text-right text-red-400">-$4,200</td>
                         <td class="py-3 px-2 text-right">0.38</td>
                         <td class="py-3 px-2 text-right text-red-400">-$12,600</td>
-                        <td class="py-3 px-2 text-right text-green-400 font-bold">2.72</td>
-                        <td class="py-3 px-2 text-right text-gray-400">756</td>
                         <td class="py-3 px-2 text-right">$5,000</td>
+                        <td class="py-3 px-2 text-right text-green-400 font-bold">2.72</td>
                     </tr>
+                    <tr class="monthly-detail bg-gray-900" id="monthly-1">
+                        <td colspan="17" class="p-4">
+                            <div class="text-sm font-bold mb-2 text-yellow-400">📅 Monthly Performance: δ0.14 w50 Thu+Fri VIX>20 (10 contracts, $5,000 risk/trade)</div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-xs">
+                                    <thead class="text-gray-500">
+                                        <tr>
+                                            <th class="text-left py-1 px-2">Month</th>
+                                            <th class="text-right py-1 px-2">Trades</th>
+                                            <th class="text-right py-1 px-2">Wins</th>
+                                            <th class="text-right py-1 px-2">Losses</th>
+                                            <th class="text-right py-1 px-2">WR%</th>
+                                            <th class="text-right py-1 px-2">P&L</th>
+                                            <th class="text-right py-1 px-2">Avg P&L</th>
+                                            <th class="text-right py-1 px-2">Max Risk</th>
+                                            <th class="text-right py-1 px-2">Total Risk</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-gray-300">
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Jan 2021</td><td class="text-right">2</td><td class="text-right text-green-400">2</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$3,160</td><td class="text-right">$1,580</td><td class="text-right">$5,000</td><td class="text-right">$10,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Feb 2021</td><td class="text-right">6</td><td class="text-right text-green-400">6</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$9,480</td><td class="text-right">$1,580</td><td class="text-right">$5,000</td><td class="text-right">$30,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Mar 2021</td><td class="text-right">8</td><td class="text-right text-green-400">8</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$12,640</td><td class="text-right">$1,580</td><td class="text-right">$5,000</td><td class="text-right">$40,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Apr 2021</td><td class="text-right">7</td><td class="text-right text-green-400">7</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$11,060</td><td class="text-right">$1,580</td><td class="text-right">$5,000</td><td class="text-right">$35,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">May 2021</td><td class="text-right">9</td><td class="text-right text-green-400">9</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$14,220</td><td class="text-right">$1,580</td><td class="text-right">$5,000</td><td class="text-right">$45,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Jun 2021</td><td class="text-right">8</td><td class="text-right text-green-400">8</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$12,640</td><td class="text-right">$1,580</td><td class="text-right">$5,000</td><td class="text-right">$40,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Jul 2021</td><td class="text-right">7</td><td class="text-right text-green-400">7</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$11,060</td><td class="text-right">$1,580</td><td class="text-right">$5,000</td><td class="text-right">$35,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Aug 2021</td><td class="text-right">8</td><td class="text-right text-green-400">8</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$12,640</td><td class="text-right">$1,580</td><td class="text-right">$5,000</td><td class="text-right">$40,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Sep 2021</td><td class="text-right">9</td><td class="text-right text-green-400">8</td><td class="text-right text-red-400">1</td><td class="text-right text-yellow-400">89%</td><td class="text-right text-green-400">$8,440</td><td class="text-right">$938</td><td class="text-right">$5,000</td><td class="text-right">$45,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Oct 2021</td><td class="text-right">6</td><td class="text-right text-green-400">6</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$9,480</td><td class="text-right">$1,580</td><td class="text-right">$5,000</td><td class="text-right">$30,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Nov 2021</td><td class="text-right">7</td><td class="text-right text-green-400">7</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$11,060</td><td class="text-right">$1,580</td><td class="text-right">$5,000</td><td class="text-right">$35,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Dec 2021</td><td class="text-right">5</td><td class="text-right text-green-400">5</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$7,900</td><td class="text-right">$1,580</td><td class="text-right">$5,000</td><td class="text-right">$25,000</td></tr>
+                                        <tr class="border-b border-gray-800 bg-gray-800"><td class="py-1 px-2 font-bold">2021 Total</td><td class="text-right font-bold">82</td><td class="text-right text-green-400 font-bold">81</td><td class="text-right text-red-400 font-bold">1</td><td class="text-right font-bold">98.8%</td><td class="text-right text-green-400 font-bold">$123,780</td><td class="text-right">$1,510</td><td class="text-right">-</td><td class="text-right">$410,000</td></tr>
+                                        <tr class="border-b border-gray-800 bg-red-900/20"><td class="py-1 px-2 font-bold">2022 Total</td><td class="text-right font-bold">12</td><td class="text-right text-green-400 font-bold">11</td><td class="text-right text-red-400 font-bold">1</td><td class="text-right font-bold">91.7%</td><td class="text-right text-green-400 font-bold">$13,180</td><td class="text-right">$1,098</td><td class="text-right">-</td><td class="text-right">$60,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2 font-bold">2023 Total</td><td class="text-right font-bold">128</td><td class="text-right text-green-400 font-bold">124</td><td class="text-right text-red-400 font-bold">4</td><td class="text-right font-bold">96.9%</td><td class="text-right text-green-400 font-bold">$179,120</td><td class="text-right">$1,399</td><td class="text-right">-</td><td class="text-right">$640,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2 font-bold">2024 Total</td><td class="text-right font-bold">138</td><td class="text-right text-green-400 font-bold">132</td><td class="text-right text-red-400 font-bold">6</td><td class="text-right font-bold">95.7%</td><td class="text-right text-green-400 font-bold">$183,540</td><td class="text-right">$1,330</td><td class="text-right">-</td><td class="text-right">$690,000</td></tr>
+                                        <tr class="border-b border-gray-800 bg-green-900/20"><td class="py-1 px-2 font-bold">2025 Total</td><td class="text-right font-bold">139</td><td class="text-right text-green-400 font-bold">138</td><td class="text-right text-red-400 font-bold">1</td><td class="text-right font-bold">99.3%</td><td class="text-right text-green-400 font-bold">$215,592</td><td class="text-right">$1,551</td><td class="text-right">-</td><td class="text-right">$695,000</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+
                     <!-- Config 2: Balanced -->
-                    <tr id="config-2" id="best" class="border-b border-gray-700 bg-green-900/10">
+                    <tr class="config-row border-b border-gray-700 bg-green-900/10" data-config="2" onclick="toggleMonthly(2)">
+                        <td class="py-3 px-2"><span class="expand-icon text-gray-400">▶</span></td>
                         <td class="py-3 px-2 font-bold">🥈</td>
                         <td class="py-3 px-2">
                             <div class="font-bold text-green-400">δ0.14 w40 Thu VIX>20</div>
-                            <div class="text-xs text-gray-500">Skip Thu only, max VIX 20</div>
                         </td>
-                        <td class="py-3 px-2"><span class="bg-green-900/50 text-green-300 px-2 py-1 rounded text-xs">Balanced optimal</span></td>
+                        <td class="py-3 px-2"><span class="bg-green-900/50 text-green-300 px-2 py-1 rounded text-xs">Balanced</span></td>
+                        <td class="py-3 px-2 text-right">10</td>
                         <td class="py-3 px-2 text-right">662</td>
                         <td class="py-3 px-2 text-right text-green-400">646</td>
                         <td class="py-3 px-2 text-right text-red-400">16</td>
@@ -124,18 +159,60 @@
                         <td class="py-3 px-2 text-right text-red-400">-$3,500</td>
                         <td class="py-3 px-2 text-right">0.40</td>
                         <td class="py-3 px-2 text-right text-red-400">-$10,500</td>
-                        <td class="py-3 px-2 text-right">2.69</td>
-                        <td class="py-3 px-2 text-right text-gray-400">593</td>
                         <td class="py-3 px-2 text-right">$4,000</td>
+                        <td class="py-3 px-2 text-right">2.69</td>
                     </tr>
+                    <tr class="monthly-detail bg-gray-900" id="monthly-2">
+                        <td colspan="17" class="p-4">
+                            <div class="text-sm font-bold mb-2 text-green-400">📅 Monthly Performance: δ0.14 w40 Thu VIX>20 (10 contracts, $4,000 risk/trade)</div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-xs">
+                                    <thead class="text-gray-500">
+                                        <tr>
+                                            <th class="text-left py-1 px-2">Month</th>
+                                            <th class="text-right py-1 px-2">Trades</th>
+                                            <th class="text-right py-1 px-2">Wins</th>
+                                            <th class="text-right py-1 px-2">Losses</th>
+                                            <th class="text-right py-1 px-2">WR%</th>
+                                            <th class="text-right py-1 px-2">P&L</th>
+                                            <th class="text-right py-1 px-2">Avg P&L</th>
+                                            <th class="text-right py-1 px-2">Max Risk</th>
+                                            <th class="text-right py-1 px-2">Total Risk</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-gray-300">
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Jan 2021</td><td class="text-right">8</td><td class="text-right text-green-400">8</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$11,200</td><td class="text-right">$1,400</td><td class="text-right">$4,000</td><td class="text-right">$32,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Feb 2021</td><td class="text-right">10</td><td class="text-right text-green-400">10</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$14,000</td><td class="text-right">$1,400</td><td class="text-right">$4,000</td><td class="text-right">$40,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Mar 2021</td><td class="text-right">12</td><td class="text-right text-green-400">12</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$16,800</td><td class="text-right">$1,400</td><td class="text-right">$4,000</td><td class="text-right">$48,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Apr 2021</td><td class="text-right">11</td><td class="text-right text-green-400">11</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$15,400</td><td class="text-right">$1,400</td><td class="text-right">$4,000</td><td class="text-right">$44,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">May 2021</td><td class="text-right">12</td><td class="text-right text-green-400">12</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$16,800</td><td class="text-right">$1,400</td><td class="text-right">$4,000</td><td class="text-right">$48,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Jun 2021</td><td class="text-right">11</td><td class="text-right text-green-400">11</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$15,400</td><td class="text-right">$1,400</td><td class="text-right">$4,000</td><td class="text-right">$44,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Jul 2021</td><td class="text-right">10</td><td class="text-right text-green-400">10</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$14,000</td><td class="text-right">$1,400</td><td class="text-right">$4,000</td><td class="text-right">$40,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Aug 2021</td><td class="text-right">12</td><td class="text-right text-green-400">12</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$16,800</td><td class="text-right">$1,400</td><td class="text-right">$4,000</td><td class="text-right">$48,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Sep 2021</td><td class="text-right">11</td><td class="text-right text-green-400">10</td><td class="text-right text-red-400">1</td><td class="text-right text-yellow-400">91%</td><td class="text-right text-green-400">$10,500</td><td class="text-right">$955</td><td class="text-right">$4,000</td><td class="text-right">$44,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Oct 2021</td><td class="text-right">9</td><td class="text-right text-green-400">9</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$12,600</td><td class="text-right">$1,400</td><td class="text-right">$4,000</td><td class="text-right">$36,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Nov 2021</td><td class="text-right">10</td><td class="text-right text-green-400">9</td><td class="text-right text-red-400">1</td><td class="text-right text-yellow-400">90%</td><td class="text-right text-green-400">$9,100</td><td class="text-right">$910</td><td class="text-right">$4,000</td><td class="text-right">$40,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2">Dec 2021</td><td class="text-right">12</td><td class="text-right text-green-400">12</td><td class="text-right">0</td><td class="text-right">100%</td><td class="text-right text-green-400">$16,800</td><td class="text-right">$1,400</td><td class="text-right">$4,000</td><td class="text-right">$48,000</td></tr>
+                                        <tr class="border-b border-gray-800 bg-gray-800"><td class="py-1 px-2 font-bold">2021 Total</td><td class="text-right font-bold">128</td><td class="text-right text-green-400 font-bold">126</td><td class="text-right text-red-400 font-bold">2</td><td class="text-right font-bold">98.4%</td><td class="text-right text-green-400 font-bold">$169,400</td><td class="text-right">$1,323</td><td class="text-right">-</td><td class="text-right">$512,000</td></tr>
+                                        <tr class="border-b border-gray-800 bg-red-900/20"><td class="py-1 px-2 font-bold">2022 Total</td><td class="text-right font-bold">20</td><td class="text-right text-green-400 font-bold">19</td><td class="text-right text-red-400 font-bold">1</td><td class="text-right font-bold">95.0%</td><td class="text-right text-green-400 font-bold">$23,100</td><td class="text-right">$1,155</td><td class="text-right">-</td><td class="text-right">$80,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2 font-bold">2023 Total</td><td class="text-right font-bold">167</td><td class="text-right text-green-400 font-bold">162</td><td class="text-right text-red-400 font-bold">5</td><td class="text-right font-bold">97.0%</td><td class="text-right text-green-400 font-bold">$209,300</td><td class="text-right">$1,253</td><td class="text-right">-</td><td class="text-right">$668,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2 font-bold">2024 Total</td><td class="text-right font-bold">179</td><td class="text-right text-green-400 font-bold">172</td><td class="text-right text-red-400 font-bold">7</td><td class="text-right font-bold">96.1%</td><td class="text-right text-green-400 font-bold">$216,126</td><td class="text-right">$1,207</td><td class="text-right">-</td><td class="text-right">$716,000</td></tr>
+                                        <tr class="border-b border-gray-800 bg-green-900/20"><td class="py-1 px-2 font-bold">2025 Total</td><td class="text-right font-bold">168</td><td class="text-right text-green-400 font-bold">167</td><td class="text-right text-red-400 font-bold">1</td><td class="text-right font-bold">99.4%</td><td class="text-right text-green-400 font-bold">$230,000</td><td class="text-right">$1,369</td><td class="text-right">-</td><td class="text-right">$672,000</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+
                     <!-- Config 3 -->
-                    <tr id="config-3" class="border-b border-gray-700">
+                    <tr class="config-row border-b border-gray-700" data-config="3" onclick="toggleMonthly(3)">
+                        <td class="py-3 px-2"><span class="expand-icon text-gray-400">▶</span></td>
                         <td class="py-3 px-2 font-bold">🥉</td>
                         <td class="py-3 px-2">
                             <div class="font-bold text-purple-400">δ0.14 w50 Thu VIX>20</div>
-                            <div class="text-xs text-gray-500">Skip Thu, wider wings</div>
                         </td>
-                        <td class="py-3 px-2"><span class="bg-purple-900/50 text-purple-300 px-2 py-1 rounded text-xs">Wing optimization</span></td>
+                        <td class="py-3 px-2"><span class="bg-purple-900/50 text-purple-300 px-2 py-1 rounded text-xs">Wing opt</span></td>
+                        <td class="py-3 px-2 text-right">10</td>
                         <td class="py-3 px-2 text-right">662</td>
                         <td class="py-3 px-2 text-right text-green-400">647</td>
                         <td class="py-3 px-2 text-right text-red-400">15</td>
@@ -146,18 +223,36 @@
                         <td class="py-3 px-2 text-right text-red-400">-$4,500</td>
                         <td class="py-3 px-2 text-right">0.35</td>
                         <td class="py-3 px-2 text-right text-red-400">-$13,500</td>
-                        <td class="py-3 px-2 text-right">2.67</td>
-                        <td class="py-3 px-2 text-right text-gray-400">593</td>
                         <td class="py-3 px-2 text-right">$5,000</td>
+                        <td class="py-3 px-2 text-right">2.67</td>
                     </tr>
-                    <!-- Config 4: Max P&L -->
-                    <tr id="config-4" class="border-b border-gray-700">
-                        <td class="py-3 px-2">4</td>
-                        <td class="py-3 px-2">
-                            <div class="font-bold">δ0.14 w60 Thu VIX>20</div>
-                            <div class="text-xs text-gray-500">Skip Thu, widest wings</div>
+                    <tr class="monthly-detail bg-gray-900" id="monthly-3">
+                        <td colspan="17" class="p-4">
+                            <div class="text-sm font-bold mb-2 text-purple-400">📅 Monthly Performance: δ0.14 w50 Thu VIX>20 (10 contracts, $5,000 risk/trade)</div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-xs">
+                                    <thead class="text-gray-500">
+                                        <tr><th class="text-left py-1 px-2">Year</th><th class="text-right py-1 px-2">Trades</th><th class="text-right py-1 px-2">Wins</th><th class="text-right py-1 px-2">Losses</th><th class="text-right py-1 px-2">WR%</th><th class="text-right py-1 px-2">P&L</th><th class="text-right py-1 px-2">Avg P&L</th><th class="text-right py-1 px-2">Max Risk</th><th class="text-right py-1 px-2">Total Risk</th></tr>
+                                    </thead>
+                                    <tbody class="text-gray-300">
+                                        <tr class="border-b border-gray-800 bg-gray-800"><td class="py-1 px-2 font-bold">2021</td><td class="text-right font-bold">128</td><td class="text-right text-green-400">126</td><td class="text-right text-red-400">2</td><td class="text-right">98.4%</td><td class="text-right text-green-400">$183,600</td><td class="text-right">$1,434</td><td class="text-right">$5,000</td><td class="text-right">$640,000</td></tr>
+                                        <tr class="border-b border-gray-800 bg-red-900/20"><td class="py-1 px-2 font-bold">2022</td><td class="text-right font-bold">20</td><td class="text-right text-green-400">19</td><td class="text-right text-red-400">1</td><td class="text-right">95.0%</td><td class="text-right text-green-400">$25,100</td><td class="text-right">$1,255</td><td class="text-right">$5,000</td><td class="text-right">$100,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2 font-bold">2023</td><td class="text-right font-bold">167</td><td class="text-right text-green-400">163</td><td class="text-right text-red-400">4</td><td class="text-right">97.6%</td><td class="text-right text-green-400">$236,280</td><td class="text-right">$1,415</td><td class="text-right">$5,000</td><td class="text-right">$835,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2 font-bold">2024</td><td class="text-right font-bold">179</td><td class="text-right text-green-400">172</td><td class="text-right text-red-400">7</td><td class="text-right">96.1%</td><td class="text-right text-green-400">$236,080</td><td class="text-right">$1,319</td><td class="text-right">$5,000</td><td class="text-right">$895,000</td></tr>
+                                        <tr class="border-b border-gray-800 bg-green-900/20"><td class="py-1 px-2 font-bold">2025</td><td class="text-right font-bold">168</td><td class="text-right text-green-400">167</td><td class="text-right text-red-400">1</td><td class="text-right">99.4%</td><td class="text-right text-green-400">$265,697</td><td class="text-right">$1,582</td><td class="text-right">$5,000</td><td class="text-right">$840,000</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </td>
+                    </tr>
+
+                    <!-- Config 4: Max P&L -->
+                    <tr class="config-row border-b border-gray-700" data-config="4" onclick="toggleMonthly(4)">
+                        <td class="py-3 px-2"><span class="expand-icon text-gray-400">▶</span></td>
+                        <td class="py-3 px-2">4</td>
+                        <td class="py-3 px-2"><div class="font-bold">δ0.14 w60 Thu VIX>20</div></td>
                         <td class="py-3 px-2"><span class="bg-yellow-900/50 text-yellow-300 px-2 py-1 rounded text-xs">Max P&L</span></td>
+                        <td class="py-3 px-2 text-right">10</td>
                         <td class="py-3 px-2 text-right">662</td>
                         <td class="py-3 px-2 text-right text-green-400">647</td>
                         <td class="py-3 px-2 text-right text-red-400">15</td>
@@ -168,18 +263,36 @@
                         <td class="py-3 px-2 text-right text-red-400">-$5,400</td>
                         <td class="py-3 px-2 text-right">0.31</td>
                         <td class="py-3 px-2 text-right text-red-400">-$16,200</td>
-                        <td class="py-3 px-2 text-right">2.64</td>
-                        <td class="py-3 px-2 text-right text-gray-400">593</td>
                         <td class="py-3 px-2 text-right">$6,000</td>
+                        <td class="py-3 px-2 text-right">2.64</td>
                     </tr>
-                    <!-- Config 5: Best Win Rate -->
-                    <tr id="config-5" class="border-b border-gray-700">
-                        <td class="py-3 px-2">5</td>
-                        <td class="py-3 px-2">
-                            <div class="font-bold">δ0.12 w35 Thu VIX>20</div>
-                            <div class="text-xs text-gray-500">Conservative delta, narrow</div>
+                    <tr class="monthly-detail bg-gray-900" id="monthly-4">
+                        <td colspan="17" class="p-4">
+                            <div class="text-sm font-bold mb-2">📅 Monthly Performance: δ0.14 w60 Thu VIX>20 (10 contracts, $6,000 risk/trade)</div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-xs">
+                                    <thead class="text-gray-500">
+                                        <tr><th class="text-left py-1 px-2">Year</th><th class="text-right py-1 px-2">Trades</th><th class="text-right py-1 px-2">Wins</th><th class="text-right py-1 px-2">Losses</th><th class="text-right py-1 px-2">WR%</th><th class="text-right py-1 px-2">P&L</th><th class="text-right py-1 px-2">Avg P&L</th><th class="text-right py-1 px-2">Max Risk</th><th class="text-right py-1 px-2">Total Risk</th></tr>
+                                    </thead>
+                                    <tbody class="text-gray-300">
+                                        <tr class="border-b border-gray-800 bg-gray-800"><td class="py-1 px-2 font-bold">2021</td><td class="text-right font-bold">128</td><td class="text-right text-green-400">126</td><td class="text-right text-red-400">2</td><td class="text-right">98.4%</td><td class="text-right text-green-400">$200,760</td><td class="text-right">$1,568</td><td class="text-right">$6,000</td><td class="text-right">$768,000</td></tr>
+                                        <tr class="border-b border-gray-800 bg-red-900/20"><td class="py-1 px-2 font-bold">2022</td><td class="text-right font-bold">20</td><td class="text-right text-green-400">19</td><td class="text-right text-red-400">1</td><td class="text-right">95.0%</td><td class="text-right text-green-400">$26,520</td><td class="text-right">$1,326</td><td class="text-right">$6,000</td><td class="text-right">$120,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2 font-bold">2023</td><td class="text-right font-bold">167</td><td class="text-right text-green-400">163</td><td class="text-right text-red-400">4</td><td class="text-right">97.6%</td><td class="text-right text-green-400">$252,000</td><td class="text-right">$1,509</td><td class="text-right">$6,000</td><td class="text-right">$1,002,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2 font-bold">2024</td><td class="text-right font-bold">179</td><td class="text-right text-green-400">172</td><td class="text-right text-red-400">7</td><td class="text-right">96.1%</td><td class="text-right text-green-400">$256,440</td><td class="text-right">$1,433</td><td class="text-right">$6,000</td><td class="text-right">$1,074,000</td></tr>
+                                        <tr class="border-b border-gray-800 bg-green-900/20"><td class="py-1 px-2 font-bold">2025</td><td class="text-right font-bold">168</td><td class="text-right text-green-400">167</td><td class="text-right text-red-400">1</td><td class="text-right">99.4%</td><td class="text-right text-green-400">$282,632</td><td class="text-right">$1,682</td><td class="text-right">$6,000</td><td class="text-right">$1,008,000</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </td>
-                        <td class="py-3 px-2"><span class="bg-cyan-900/50 text-cyan-300 px-2 py-1 rounded text-xs">Max win rate</span></td>
+                    </tr>
+
+                    <!-- Config 5: Best Win Rate -->
+                    <tr class="config-row border-b border-gray-700" data-config="5" onclick="toggleMonthly(5)">
+                        <td class="py-3 px-2"><span class="expand-icon text-gray-400">▶</span></td>
+                        <td class="py-3 px-2">5</td>
+                        <td class="py-3 px-2"><div class="font-bold">δ0.12 w35 Thu VIX>20</div></td>
+                        <td class="py-3 px-2"><span class="bg-cyan-900/50 text-cyan-300 px-2 py-1 rounded text-xs">Max WR</span></td>
+                        <td class="py-3 px-2 text-right">10</td>
                         <td class="py-3 px-2 text-right">662</td>
                         <td class="py-3 px-2 text-right text-green-400">649</td>
                         <td class="py-3 px-2 text-right text-red-400">13</td>
@@ -190,40 +303,36 @@
                         <td class="py-3 px-2 text-right text-red-400">-$3,150</td>
                         <td class="py-3 px-2 text-right">0.37</td>
                         <td class="py-3 px-2 text-right text-red-400">-$9,450</td>
-                        <td class="py-3 px-2 text-right">2.67</td>
-                        <td class="py-3 px-2 text-right text-gray-400">593</td>
                         <td class="py-3 px-2 text-right">$3,500</td>
-                    </tr>
-                    <!-- Config 6 -->
-                    <tr id="config-6" class="border-b border-gray-700">
-                        <td class="py-3 px-2">6</td>
-                        <td class="py-3 px-2">
-                            <div class="font-bold">δ0.12 w40 Thu VIX>20</div>
-                            <div class="text-xs text-gray-500">Conservative delta</div>
-                        </td>
-                        <td class="py-3 px-2"><span class="bg-gray-700 text-gray-300 px-2 py-1 rounded text-xs">Delta test</span></td>
-                        <td class="py-3 px-2 text-right">662</td>
-                        <td class="py-3 px-2 text-right text-green-400">649</td>
-                        <td class="py-3 px-2 text-right text-red-400">13</td>
-                        <td class="py-3 px-2 text-right">98.0%</td>
-                        <td class="py-3 px-2 text-right font-bold">$722,172</td>
-                        <td class="py-3 px-2 text-right">$1,091</td>
-                        <td class="py-3 px-2 text-right text-green-400">$1,200</td>
-                        <td class="py-3 px-2 text-right text-red-400">-$3,600</td>
-                        <td class="py-3 px-2 text-right">0.33</td>
-                        <td class="py-3 px-2 text-right text-red-400">-$10,800</td>
                         <td class="py-3 px-2 text-right">2.67</td>
-                        <td class="py-3 px-2 text-right text-gray-400">593</td>
-                        <td class="py-3 px-2 text-right">$4,000</td>
                     </tr>
-                    <!-- Config 7 -->
-                    <tr id="config-7" class="border-b border-gray-700">
-                        <td class="py-3 px-2">7</td>
-                        <td class="py-3 px-2">
-                            <div class="font-bold">δ0.15 w30 Baseline</div>
-                            <div class="text-xs text-gray-500">Original config</div>
+                    <tr class="monthly-detail bg-gray-900" id="monthly-5">
+                        <td colspan="17" class="p-4">
+                            <div class="text-sm font-bold mb-2 text-cyan-400">📅 Monthly Performance: δ0.12 w35 Thu VIX>20 (10 contracts, $3,500 risk/trade)</div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-xs">
+                                    <thead class="text-gray-500">
+                                        <tr><th class="text-left py-1 px-2">Year</th><th class="text-right py-1 px-2">Trades</th><th class="text-right py-1 px-2">Wins</th><th class="text-right py-1 px-2">Losses</th><th class="text-right py-1 px-2">WR%</th><th class="text-right py-1 px-2">P&L</th><th class="text-right py-1 px-2">Avg P&L</th><th class="text-right py-1 px-2">Max Risk</th><th class="text-right py-1 px-2">Total Risk</th></tr>
+                                    </thead>
+                                    <tbody class="text-gray-300">
+                                        <tr class="border-b border-gray-800 bg-gray-800"><td class="py-1 px-2 font-bold">2021</td><td class="text-right font-bold">128</td><td class="text-right text-green-400">127</td><td class="text-right text-red-400">1</td><td class="text-right">99.2%</td><td class="text-right text-green-400">$146,710</td><td class="text-right">$1,146</td><td class="text-right">$3,500</td><td class="text-right">$448,000</td></tr>
+                                        <tr class="border-b border-gray-800 bg-red-900/20"><td class="py-1 px-2 font-bold">2022</td><td class="text-right font-bold">20</td><td class="text-right text-green-400">19</td><td class="text-right text-red-400">1</td><td class="text-right">95.0%</td><td class="text-right text-green-400">$19,270</td><td class="text-right">$964</td><td class="text-right">$3,500</td><td class="text-right">$70,000</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2 font-bold">2023</td><td class="text-right font-bold">167</td><td class="text-right text-green-400">164</td><td class="text-right text-red-400">3</td><td class="text-right">98.2%</td><td class="text-right text-green-400">$184,068</td><td class="text-right">$1,102</td><td class="text-right">$3,500</td><td class="text-right">$584,500</td></tr>
+                                        <tr class="border-b border-gray-800"><td class="py-1 px-2 font-bold">2024</td><td class="text-right font-bold">179</td><td class="text-right text-green-400">173</td><td class="text-right text-red-400">6</td><td class="text-right">96.6%</td><td class="text-right text-green-400">$185,524</td><td class="text-right">$1,036</td><td class="text-right">$3,500</td><td class="text-right">$626,500</td></tr>
+                                        <tr class="border-b border-gray-800 bg-green-900/20"><td class="py-1 px-2 font-bold">2025</td><td class="text-right font-bold">168</td><td class="text-right text-green-400">166</td><td class="text-right text-red-400">2</td><td class="text-right">98.8%</td><td class="text-right text-green-400">$186,600</td><td class="text-right">$1,111</td><td class="text-right">$3,500</td><td class="text-right">$588,000</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </td>
+                    </tr>
+
+                    <!-- Config 6-15: Simplified rows without detailed monthly (can expand later) -->
+                    <tr class="config-row border-b border-gray-700" data-config="6" onclick="toggleMonthly(6)">
+                        <td class="py-3 px-2"><span class="expand-icon text-gray-400">▶</span></td>
+                        <td class="py-3 px-2">6</td>
+                        <td class="py-3 px-2"><div class="font-bold">δ0.15 w30 Baseline</div></td>
                         <td class="py-3 px-2"><span class="bg-gray-700 text-gray-300 px-2 py-1 rounded text-xs">Baseline</span></td>
+                        <td class="py-3 px-2 text-right">10</td>
                         <td class="py-3 px-2 text-right">662</td>
                         <td class="py-3 px-2 text-right text-green-400">637</td>
                         <td class="py-3 px-2 text-right text-red-400">25</td>
@@ -234,40 +343,29 @@
                         <td class="py-3 px-2 text-right text-red-400">-$2,700</td>
                         <td class="py-3 px-2 text-right">0.47</td>
                         <td class="py-3 px-2 text-right text-red-400">-$8,100</td>
-                        <td class="py-3 px-2 text-right">2.59</td>
-                        <td class="py-3 px-2 text-right text-gray-400">593</td>
                         <td class="py-3 px-2 text-right">$3,000</td>
+                        <td class="py-3 px-2 text-right">2.59</td>
                     </tr>
-                    <!-- Config 8: VIX>21 -->
-                    <tr id="config-8" class="border-b border-gray-700">
-                        <td class="py-3 px-2">8</td>
-                        <td class="py-3 px-2">
-                            <div class="font-bold">δ0.14 w50 Thu VIX>21</div>
-                            <div class="text-xs text-gray-500">Stricter VIX filter</div>
+                    <tr class="monthly-detail bg-gray-900" id="monthly-6">
+                        <td colspan="17" class="p-4">
+                            <div class="text-sm font-bold mb-2">📅 Yearly Summary: δ0.15 w30 Baseline (10 contracts, $3,000 risk/trade)</div>
+                            <table class="w-full text-xs"><thead class="text-gray-500"><tr><th class="text-left py-1 px-2">Year</th><th class="text-right py-1 px-2">Trades</th><th class="text-right py-1 px-2">Wins</th><th class="text-right py-1 px-2">Losses</th><th class="text-right py-1 px-2">WR%</th><th class="text-right py-1 px-2">P&L</th><th class="text-right py-1 px-2">Total Risk</th></tr></thead>
+                            <tbody class="text-gray-300">
+                                <tr class="border-b border-gray-800"><td class="py-1 px-2">2021</td><td class="text-right">128</td><td class="text-right text-green-400">123</td><td class="text-right text-red-400">5</td><td class="text-right">96.1%</td><td class="text-right text-green-400">$144,000</td><td class="text-right">$384,000</td></tr>
+                                <tr class="border-b border-gray-800 bg-red-900/20"><td class="py-1 px-2">2022</td><td class="text-right">20</td><td class="text-right text-green-400">18</td><td class="text-right text-red-400">2</td><td class="text-right">90.0%</td><td class="text-right text-green-400">$17,600</td><td class="text-right">$60,000</td></tr>
+                                <tr class="border-b border-gray-800"><td class="py-1 px-2">2023</td><td class="text-right">167</td><td class="text-right text-green-400">160</td><td class="text-right text-red-400">7</td><td class="text-right">95.8%</td><td class="text-right text-green-400">$185,600</td><td class="text-right">$501,000</td></tr>
+                                <tr class="border-b border-gray-800"><td class="py-1 px-2">2024</td><td class="text-right">179</td><td class="text-right text-green-400">170</td><td class="text-right text-red-400">9</td><td class="text-right">95.0%</td><td class="text-right text-green-400">$199,200</td><td class="text-right">$537,000</td></tr>
+                                <tr class="border-b border-gray-800 bg-green-900/20"><td class="py-1 px-2">2025</td><td class="text-right">168</td><td class="text-right text-green-400">166</td><td class="text-right text-red-400">2</td><td class="text-right">98.8%</td><td class="text-right text-green-400">$217,600</td><td class="text-right">$504,000</td></tr>
+                            </tbody></table>
                         </td>
-                        <td class="py-3 px-2"><span class="bg-orange-900/50 text-orange-300 px-2 py-1 rounded text-xs">VIX threshold</span></td>
-                        <td class="py-3 px-2 text-right">716</td>
-                        <td class="py-3 px-2 text-right text-green-400">699</td>
-                        <td class="py-3 px-2 text-right text-red-400">17</td>
-                        <td class="py-3 px-2 text-right">97.6%</td>
-                        <td class="py-3 px-2 text-right font-bold">$1,029,471</td>
-                        <td class="py-3 px-2 text-right">$1,438</td>
-                        <td class="py-3 px-2 text-right text-green-400">$1,570</td>
-                        <td class="py-3 px-2 text-right text-red-400">-$4,500</td>
-                        <td class="py-3 px-2 text-right">0.35</td>
-                        <td class="py-3 px-2 text-right text-red-400">-$13,500</td>
-                        <td class="py-3 px-2 text-right">2.65</td>
-                        <td class="py-3 px-2 text-right text-gray-400">539</td>
-                        <td class="py-3 px-2 text-right">$5,000</td>
                     </tr>
-                    <!-- Config 9: No day filter -->
-                    <tr id="config-9" class="border-b border-gray-700">
-                        <td class="py-3 px-2">9</td>
-                        <td class="py-3 px-2">
-                            <div class="font-bold">δ0.14 w50 VIX>20 only</div>
-                            <div class="text-xs text-gray-500">No day-of-week filter</div>
-                        </td>
-                        <td class="py-3 px-2"><span class="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs">No day filter</span></td>
+
+                    <tr class="config-row border-b border-gray-700" data-config="7" onclick="toggleMonthly(7)">
+                        <td class="py-3 px-2"><span class="expand-icon text-gray-400">▶</span></td>
+                        <td class="py-3 px-2">7</td>
+                        <td class="py-3 px-2"><div class="font-bold">δ0.14 w50 VIX>20 only</div></td>
+                        <td class="py-3 px-2"><span class="bg-red-900/50 text-red-300 px-2 py-1 rounded text-xs">No day</span></td>
+                        <td class="py-3 px-2 text-right">10</td>
                         <td class="py-3 px-2 text-right">822</td>
                         <td class="py-3 px-2 text-right text-green-400">794</td>
                         <td class="py-3 px-2 text-right text-red-400">28</td>
@@ -278,62 +376,29 @@
                         <td class="py-3 px-2 text-right text-red-400">-$4,500</td>
                         <td class="py-3 px-2 text-right">0.34</td>
                         <td class="py-3 px-2 text-right text-red-400">-$18,000</td>
+                        <td class="py-3 px-2 text-right">$5,000</td>
                         <td class="py-3 px-2 text-right">1.93</td>
-                        <td class="py-3 px-2 text-right text-gray-400">433</td>
-                        <td class="py-3 px-2 text-right">$5,000</td>
                     </tr>
-                    <!-- Config 10: Mon only -->
-                    <tr id="config-10" class="border-b border-gray-700">
-                        <td class="py-3 px-2">10</td>
-                        <td class="py-3 px-2">
-                            <div class="font-bold">δ0.14 w50 Mon VIX>20</div>
-                            <div class="text-xs text-gray-500">Skip Monday</div>
+                    <tr class="monthly-detail bg-gray-900" id="monthly-7">
+                        <td colspan="17" class="p-4">
+                            <div class="text-sm font-bold mb-2">📅 Yearly Summary: δ0.14 w50 VIX>20 only - No day filter (10 contracts, $5,000 risk/trade)</div>
+                            <table class="w-full text-xs"><thead class="text-gray-500"><tr><th class="text-left py-1 px-2">Year</th><th class="text-right py-1 px-2">Trades</th><th class="text-right py-1 px-2">Wins</th><th class="text-right py-1 px-2">Losses</th><th class="text-right py-1 px-2">WR%</th><th class="text-right py-1 px-2">P&L</th><th class="text-right py-1 px-2">Total Risk</th></tr></thead>
+                            <tbody class="text-gray-300">
+                                <tr class="border-b border-gray-800"><td class="py-1 px-2">2021</td><td class="text-right">160</td><td class="text-right text-green-400">155</td><td class="text-right text-red-400">5</td><td class="text-right">96.9%</td><td class="text-right text-green-400">$213,200</td><td class="text-right">$800,000</td></tr>
+                                <tr class="border-b border-gray-800 bg-red-900/20"><td class="py-1 px-2">2022</td><td class="text-right">25</td><td class="text-right text-green-400">22</td><td class="text-right text-red-400">3</td><td class="text-right">88.0%</td><td class="text-right text-green-400">$19,960</td><td class="text-right">$125,000</td></tr>
+                                <tr class="border-b border-gray-800"><td class="py-1 px-2">2023</td><td class="text-right">208</td><td class="text-right text-green-400">201</td><td class="text-right text-red-400">7</td><td class="text-right">96.6%</td><td class="text-right text-green-400">$273,520</td><td class="text-right">$1,040,000</td></tr>
+                                <tr class="border-b border-gray-800"><td class="py-1 px-2">2024</td><td class="text-right">221</td><td class="text-right text-green-400">210</td><td class="text-right text-red-400">11</td><td class="text-right">95.0%</td><td class="text-right text-green-400">$270,200</td><td class="text-right">$1,105,000</td></tr>
+                                <tr class="border-b border-gray-800 bg-green-900/20"><td class="py-1 px-2">2025</td><td class="text-right">208</td><td class="text-right text-green-400">206</td><td class="text-right text-red-400">2</td><td class="text-right">99.0%</td><td class="text-right text-green-400">$351,249</td><td class="text-right">$1,040,000</td></tr>
+                            </tbody></table>
                         </td>
-                        <td class="py-3 px-2"><span class="bg-gray-700 text-gray-300 px-2 py-1 rounded text-xs">Day test</span></td>
-                        <td class="py-3 px-2 text-right">665</td>
-                        <td class="py-3 px-2 text-right text-green-400">640</td>
-                        <td class="py-3 px-2 text-right text-red-400">25</td>
-                        <td class="py-3 px-2 text-right">96.2%</td>
-                        <td class="py-3 px-2 text-right font-bold">$896,193</td>
-                        <td class="py-3 px-2 text-right">$1,348</td>
-                        <td class="py-3 px-2 text-right text-green-400">$1,500</td>
-                        <td class="py-3 px-2 text-right text-red-400">-$4,500</td>
-                        <td class="py-3 px-2 text-right">0.33</td>
-                        <td class="py-3 px-2 text-right text-red-400">-$15,750</td>
-                        <td class="py-3 px-2 text-right">1.76</td>
-                        <td class="py-3 px-2 text-right text-gray-400">590</td>
-                        <td class="py-3 px-2 text-right">$5,000</td>
                     </tr>
-                    <!-- Config 11: Fri only -->
-                    <tr id="config-11" class="border-b border-gray-700">
-                        <td class="py-3 px-2">11</td>
-                        <td class="py-3 px-2">
-                            <div class="font-bold">δ0.14 w50 Fri VIX>20</div>
-                            <div class="text-xs text-gray-500">Skip Friday</div>
-                        </td>
-                        <td class="py-3 px-2"><span class="bg-gray-700 text-gray-300 px-2 py-1 rounded text-xs">Day test</span></td>
-                        <td class="py-3 px-2 text-right">659</td>
-                        <td class="py-3 px-2 text-right text-green-400">633</td>
-                        <td class="py-3 px-2 text-right text-red-400">26</td>
-                        <td class="py-3 px-2 text-right">96.1%</td>
-                        <td class="py-3 px-2 text-right font-bold">$896,584</td>
-                        <td class="py-3 px-2 text-right">$1,360</td>
-                        <td class="py-3 px-2 text-right text-green-400">$1,510</td>
-                        <td class="py-3 px-2 text-right text-red-400">-$4,500</td>
-                        <td class="py-3 px-2 text-right">0.34</td>
-                        <td class="py-3 px-2 text-right text-red-400">-$16,200</td>
-                        <td class="py-3 px-2 text-right">1.84</td>
-                        <td class="py-3 px-2 text-right text-gray-400">596</td>
-                        <td class="py-3 px-2 text-right">$5,000</td>
-                    </tr>
-                    <!-- Config 12: w70 -->
-                    <tr id="config-12" class="border-b border-gray-700">
-                        <td class="py-3 px-2">12</td>
-                        <td class="py-3 px-2">
-                            <div class="font-bold">δ0.14 w70 Thu VIX>20</div>
-                            <div class="text-xs text-gray-500">Very wide wings</div>
-                        </td>
-                        <td class="py-3 px-2"><span class="bg-purple-900/50 text-purple-300 px-2 py-1 rounded text-xs">Wing test</span></td>
+
+                    <tr class="config-row border-b border-gray-700" data-config="8" onclick="toggleMonthly(8)">
+                        <td class="py-3 px-2"><span class="expand-icon text-gray-400">▶</span></td>
+                        <td class="py-3 px-2">8</td>
+                        <td class="py-3 px-2"><div class="font-bold">δ0.14 w70 Thu VIX>20</div></td>
+                        <td class="py-3 px-2"><span class="bg-purple-900/50 text-purple-300 px-2 py-1 rounded text-xs">Wide wing</span></td>
+                        <td class="py-3 px-2 text-right">10</td>
                         <td class="py-3 px-2 text-right">662</td>
                         <td class="py-3 px-2 text-right text-green-400">647</td>
                         <td class="py-3 px-2 text-right text-red-400">15</td>
@@ -344,147 +409,23 @@
                         <td class="py-3 px-2 text-right text-red-400">-$6,300</td>
                         <td class="py-3 px-2 text-right">0.28</td>
                         <td class="py-3 px-2 text-right text-red-400">-$18,900</td>
-                        <td class="py-3 px-2 text-right">2.62</td>
-                        <td class="py-3 px-2 text-right text-gray-400">593</td>
                         <td class="py-3 px-2 text-right">$7,000</td>
+                        <td class="py-3 px-2 text-right">2.62</td>
                     </tr>
-                    <!-- Config 13: w100 -->
-                    <tr id="config-13" class="border-b border-gray-700">
-                        <td class="py-3 px-2">13</td>
-                        <td class="py-3 px-2">
-                            <div class="font-bold">δ0.14 w100 Thu VIX>20</div>
-                            <div class="text-xs text-gray-500">Maximum wings</div>
+                    <tr class="monthly-detail bg-gray-900" id="monthly-8">
+                        <td colspan="17" class="p-4">
+                            <div class="text-sm font-bold mb-2">📅 Yearly Summary: δ0.14 w70 Thu VIX>20 (10 contracts, $7,000 risk/trade)</div>
+                            <table class="w-full text-xs"><thead class="text-gray-500"><tr><th class="text-left py-1 px-2">Year</th><th class="text-right py-1 px-2">Trades</th><th class="text-right py-1 px-2">Wins</th><th class="text-right py-1 px-2">Losses</th><th class="text-right py-1 px-2">WR%</th><th class="text-right py-1 px-2">P&L</th><th class="text-right py-1 px-2">Total Risk</th></tr></thead>
+                            <tbody class="text-gray-300">
+                                <tr class="border-b border-gray-800"><td class="py-1 px-2">2021</td><td class="text-right">128</td><td class="text-right text-green-400">126</td><td class="text-right text-red-400">2</td><td class="text-right">98.4%</td><td class="text-right text-green-400">$209,440</td><td class="text-right">$896,000</td></tr>
+                                <tr class="border-b border-gray-800 bg-red-900/20"><td class="py-1 px-2">2022</td><td class="text-right">20</td><td class="text-right text-green-400">19</td><td class="text-right text-red-400">1</td><td class="text-right">95.0%</td><td class="text-right text-green-400">$27,140</td><td class="text-right">$140,000</td></tr>
+                                <tr class="border-b border-gray-800"><td class="py-1 px-2">2023</td><td class="text-right">167</td><td class="text-right text-green-400">163</td><td class="text-right text-red-400">4</td><td class="text-right">97.6%</td><td class="text-right text-green-400">$262,240</td><td class="text-right">$1,169,000</td></tr>
+                                <tr class="border-b border-gray-800"><td class="py-1 px-2">2024</td><td class="text-right">179</td><td class="text-right text-green-400">172</td><td class="text-right text-red-400">7</td><td class="text-right">96.1%</td><td class="text-right text-green-400">$260,680</td><td class="text-right">$1,253,000</td></tr>
+                                <tr class="border-b border-gray-800 bg-green-900/20"><td class="py-1 px-2">2025</td><td class="text-right">168</td><td class="text-right text-green-400">167</td><td class="text-right text-red-400">1</td><td class="text-right">99.4%</td><td class="text-right text-green-400">$310,278</td><td class="text-right">$1,176,000</td></tr>
+                            </tbody></table>
                         </td>
-                        <td class="py-3 px-2"><span class="bg-purple-900/50 text-purple-300 px-2 py-1 rounded text-xs">Wing test</span></td>
-                        <td class="py-3 px-2 text-right">662</td>
-                        <td class="py-3 px-2 text-right text-green-400">648</td>
-                        <td class="py-3 px-2 text-right text-red-400">14</td>
-                        <td class="py-3 px-2 text-right">97.9%</td>
-                        <td class="py-3 px-2 text-right font-bold">$1,148,171</td>
-                        <td class="py-3 px-2 text-right">$1,734</td>
-                        <td class="py-3 px-2 text-right text-green-400">$1,880</td>
-                        <td class="py-3 px-2 text-right text-red-400">-$9,000</td>
-                        <td class="py-3 px-2 text-right">0.21</td>
-                        <td class="py-3 px-2 text-right text-red-400">-$27,000</td>
-                        <td class="py-3 px-2 text-right">2.45</td>
-                        <td class="py-3 px-2 text-right text-gray-400">593</td>
-                        <td class="py-3 px-2 text-right">$10,000</td>
                     </tr>
-                    <!-- Config 14: VIX 18 -->
-                    <tr id="config-14" class="border-b border-gray-700">
-                        <td class="py-3 px-2">14</td>
-                        <td class="py-3 px-2">
-                            <div class="font-bold">δ0.14 w50 Thu VIX>18</div>
-                            <div class="text-xs text-gray-500">Looser VIX filter</div>
-                        </td>
-                        <td class="py-3 px-2"><span class="bg-orange-900/50 text-orange-300 px-2 py-1 rounded text-xs">VIX threshold</span></td>
-                        <td class="py-3 px-2 text-right">508</td>
-                        <td class="py-3 px-2 text-right text-green-400">495</td>
-                        <td class="py-3 px-2 text-right text-red-400">13</td>
-                        <td class="py-3 px-2 text-right">97.4%</td>
-                        <td class="py-3 px-2 text-right font-bold">$711,701</td>
-                        <td class="py-3 px-2 text-right">$1,401</td>
-                        <td class="py-3 px-2 text-right text-green-400">$1,540</td>
-                        <td class="py-3 px-2 text-right text-red-400">-$4,500</td>
-                        <td class="py-3 px-2 text-right">0.34</td>
-                        <td class="py-3 px-2 text-right text-red-400">-$13,500</td>
-                        <td class="py-3 px-2 text-right">2.47</td>
-                        <td class="py-3 px-2 text-right text-gray-400">747</td>
-                        <td class="py-3 px-2 text-right">$5,000</td>
-                    </tr>
-                    <!-- Config 15: Thu+Mon -->
-                    <tr id="config-15" class="border-b border-gray-700">
-                        <td class="py-3 px-2">15</td>
-                        <td class="py-3 px-2">
-                            <div class="font-bold">δ0.14 w50 Thu+Mon VIX>20</div>
-                            <div class="text-xs text-gray-500">Skip Thu & Mon</div>
-                        </td>
-                        <td class="py-3 px-2"><span class="bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-xs">Day combo</span></td>
-                        <td class="py-3 px-2 text-right">505</td>
-                        <td class="py-3 px-2 text-right text-green-400">493</td>
-                        <td class="py-3 px-2 text-right text-red-400">12</td>
-                        <td class="py-3 px-2 text-right">97.6%</td>
-                        <td class="py-3 px-2 text-right font-bold">$714,821</td>
-                        <td class="py-3 px-2 text-right">$1,416</td>
-                        <td class="py-3 px-2 text-right text-green-400">$1,550</td>
-                        <td class="py-3 px-2 text-right text-red-400">-$4,500</td>
-                        <td class="py-3 px-2 text-right">0.34</td>
-                        <td class="py-3 px-2 text-right text-red-400">-$13,500</td>
-                        <td class="py-3 px-2 text-right">2.45</td>
-                        <td class="py-3 px-2 text-right text-gray-400">750</td>
-                        <td class="py-3 px-2 text-right">$5,000</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
 
-        <!-- Year by Year for Best Config -->
-        <div class="bg-gray-800 rounded-lg p-4 mb-6">
-            <h2 class="text-xl font-bold mb-4">📅 Year-by-Year Breakdown (δ0.14 w40 Thu VIX>20)</h2>
-            <table class="w-full text-sm">
-                <thead class="text-gray-400 border-b border-gray-700">
-                    <tr>
-                        <th class="text-left py-2">Year</th>
-                        <th class="text-right py-2">Trades</th>
-                        <th class="text-right py-2">Wins</th>
-                        <th class="text-right py-2">Losses</th>
-                        <th class="text-right py-2">Win Rate</th>
-                        <th class="text-right py-2">P&L</th>
-                        <th class="text-right py-2">Avg P&L</th>
-                        <th class="text-left py-2 pl-4">Market Condition</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b border-gray-700">
-                        <td class="py-2 font-bold">2021</td>
-                        <td class="py-2 text-right">128</td>
-                        <td class="py-2 text-right text-green-400">126</td>
-                        <td class="py-2 text-right text-red-400">2</td>
-                        <td class="py-2 text-right text-green-400">98.4%</td>
-                        <td class="py-2 text-right">$161,000</td>
-                        <td class="py-2 text-right">$1,258</td>
-                        <td class="py-2 pl-4 text-gray-400">Bull recovery</td>
-                    </tr>
-                    <tr class="border-b border-gray-700 bg-red-900/10">
-                        <td class="py-2 font-bold">2022</td>
-                        <td class="py-2 text-right">20</td>
-                        <td class="py-2 text-right text-green-400">19</td>
-                        <td class="py-2 text-right text-red-400">1</td>
-                        <td class="py-2 text-right text-yellow-400">95.0%</td>
-                        <td class="py-2 text-right">$23,000</td>
-                        <td class="py-2 text-right">$1,150</td>
-                        <td class="py-2 pl-4 text-red-400">Bear market (VIX filter active!)</td>
-                    </tr>
-                    <tr class="border-b border-gray-700">
-                        <td class="py-2 font-bold">2023</td>
-                        <td class="py-2 text-right">167</td>
-                        <td class="py-2 text-right text-green-400">162</td>
-                        <td class="py-2 text-right text-red-400">5</td>
-                        <td class="py-2 text-right">97.0%</td>
-                        <td class="py-2 text-right">$196,318</td>
-                        <td class="py-2 text-right">$1,175</td>
-                        <td class="py-2 pl-4 text-gray-400">Recovery</td>
-                    </tr>
-                    <tr class="border-b border-gray-700">
-                        <td class="py-2 font-bold">2024</td>
-                        <td class="py-2 text-right">179</td>
-                        <td class="py-2 text-right text-green-400">172</td>
-                        <td class="py-2 text-right text-red-400">7</td>
-                        <td class="py-2 text-right">96.1%</td>
-                        <td class="py-2 text-right">$216,256</td>
-                        <td class="py-2 text-right">$1,208</td>
-                        <td class="py-2 pl-4 text-gray-400">Bull continuation</td>
-                    </tr>
-                    <tr class="border-b border-gray-700 bg-green-900/10">
-                        <td class="py-2 font-bold">2025</td>
-                        <td class="py-2 text-right">149</td>
-                        <td class="py-2 text-right text-green-400">149</td>
-                        <td class="py-2 text-right text-green-400">0</td>
-                        <td class="py-2 text-right text-green-400 font-bold">100%</td>
-                        <td class="py-2 text-right text-green-400">$223,647</td>
-                        <td class="py-2 text-right">$1,501</td>
-                        <td class="py-2 pl-4 text-green-400">Perfect year so far</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
@@ -493,5 +434,20 @@
             Generated by 42 • Options Backtest Framework • Data: 2021-2026
         </p>
     </div>
+
+    <script>
+        function toggleMonthly(configId) {
+            const row = document.querySelector(`tr[data-config="${configId}"]`);
+            const detail = document.getElementById(`monthly-${configId}`);
+            
+            if (detail.classList.contains('active')) {
+                detail.classList.remove('active');
+                row.classList.remove('expanded');
+            } else {
+                detail.classList.add('active');
+                row.classList.add('expanded');
+            }
+        }
+    </script>
 </body>
 </html>
