@@ -672,11 +672,37 @@ contracts: 2x (conservative) to 10x (aggressive)
 5Y: Sharpe 2.64, $1.02M, 97.7% WR
 ```
 
+## Iteration 23: VIX and Day-of-Week Fine-tuning (21:35 UTC)
+
+**VIX Threshold (δ0.14 w50):**
+| VIX Max | Sharpe | P&L |
+|---------|--------|-----|
+| >20 | **2.67** | $947K |
+| >21 | 2.65 | $1.03M |
+
+**Day Skip (δ0.14 w50, VIX>20):**
+| Skip Days | Sharpe | P&L |
+|-----------|--------|-----|
+| Thu + Fri | **2.72** | $715K |
+| Thu only | 2.67 | **$947K** |
+| None | 1.93 | $1.13M |
+
+---
+
+## CURRENT BEST CONFIGS
+
+| Rank | Config | Sharpe | P&L | WR |
+|------|--------|--------|-----|-----|
+| 1 | δ0.14 w50 Thu+Fri VIX>20 | **2.72** | $715K | 97.4% |
+| 2 | δ0.14 w40 Thu VIX>20 | 2.69 | $848K | 97.6% |
+| 3 | δ0.14 w50 Thu VIX>20 | 2.67 | $947K | **97.7%** |
+| 4 | δ0.14 w60 Thu VIX>20 | 2.64 | **$1.02M** | 97.7% |
+
 ---
 
 ## Questions for Dili
 
-1. **Which option?** A (max Sharpe) / B (balanced) / C (max P&L)?
+1. **Priority?** Max Sharpe vs Max P&L vs Balance?
 2. **Ready for paper trading?**
 
 ---
