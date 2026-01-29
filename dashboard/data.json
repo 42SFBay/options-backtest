@@ -1,47 +1,79 @@
 {
-  "updated": "2026-01-29T20:03:51.403842",
+  "updated": "2026-01-29T20:49:26.435490",
+  "best_config": {
+    "delta": 0.14,
+    "wing": 30,
+    "dte": 2,
+    "skip_days": [
+      "Thursday"
+    ],
+    "skip_vix_above": 20,
+    "sizing": "2x always"
+  },
+  "results_1y": {
+    "trades": 150,
+    "win_rate": 99.3,
+    "sharpe": 4.55,
+    "pnl": 184954
+  },
+  "results_3y": {
+    "trades": 507,
+    "win_rate": 96.6,
+    "sharpe": 2.57,
+    "pnl": 547103
+  },
   "strategies": [
     {
-      "name": "2x when VIX 14-18 + Skip Thu",
-      "trades": 150,
-      "win_rate": 0.9733333333333334,
-      "total_pnl": 176824.6110050269,
-      "sharpe": 2.813184599859222,
+      "name": "\u03b40.14 + 2x + Skip Thu/VIX>20",
+      "sharpe_1y": 4.55,
+      "sharpe_3y": 2.57,
+      "pnl_3y": 547103,
       "status": "BEST"
     },
     {
-      "name": "Progressive 2x/3x sizing",
-      "trades": 150,
-      "win_rate": 0.98,
-      "total_pnl": 225832.1416217031,
-      "sharpe": 2.385985931236215,
-      "status": "HIGH P&L"
+      "name": "+ Skip January",
+      "sharpe_1y": null,
+      "sharpe_3y": 2.76,
+      "pnl_3y": 501592,
+      "status": "OPTIONAL"
     },
     {
-      "name": "Combined filters (no sizing)",
-      "trades": 150,
-      "win_rate": 0.9733333333333334,
-      "total_pnl": 95174.83719131198,
-      "sharpe": 2.0740983398895048,
-      "status": "BASELINE"
+      "name": "+ Skip Jan+Feb+Dec",
+      "sharpe_1y": null,
+      "sharpe_3y": 3.14,
+      "pnl_3y": 410065,
+      "status": "HIGH SHARPE"
     },
     {
-      "name": "Skip Thursday only",
-      "trades": 201,
-      "win_rate": 0.9552238805970149,
-      "total_pnl": 116782.76338189474,
-      "sharpe": 1.1007006107292676,
-      "status": "SIMPLE"
+      "name": "Thu+Fri skip",
+      "sharpe_1y": 9.88,
+      "sharpe_3y": 2.54,
+      "pnl_3y": 413589,
+      "status": "LUCK"
     },
     {
-      "name": "No filters (baseline)",
-      "trades": 249,
-      "win_rate": 0.9196787148594378,
-      "total_pnl": 126022.95656377182,
-      "sharpe": 0.7594934396817399,
-      "status": "AVOID"
+      "name": "Old baseline (\u03b40.15)",
+      "sharpe_1y": 2.81,
+      "sharpe_3y": null,
+      "pnl_3y": null,
+      "status": "DEPRECATED"
     }
   ],
-  "best_sharpe": 2.813184599859222,
-  "best_pnl": 225832.1416217031
+  "findings": [
+    "Delta 0.14 beats 0.15 (Sharpe +6%)",
+    "2x sizing always when filters pass",
+    "Skip Thursday = biggest single improvement",
+    "Skip January = free Sharpe boost",
+    "0 DTE cannot be rescued",
+    "PT/SL irrelevant for 2 DTE"
+  ],
+  "monthly_best": [
+    "May",
+    "June",
+    "October"
+  ],
+  "monthly_worst": [
+    "January",
+    "December"
+  ]
 }
