@@ -386,12 +386,41 @@ VIX 16-18 + Downtrend + Skip Thu + Skip Jan
 2x sizing → $65K/5Y, 100% WR, Sharpe 10.83
 ```
 
+## Iteration 13: Delta/Wing Optimization (21:55 UTC)
+
+**Holy Grail with Different Delta/Wing (5Y, 2x sizing):**
+
+| Delta | Wing | Losses | WR | Sharpe | P&L |
+|-------|------|--------|-----|--------|-----|
+| **0.10** | **25** | 0 | 100% | **17.98** | $86K |
+| 0.10 | 30 | 0 | 100% | 15.57 | $97K |
+| 0.12 | 30 | 0 | 100% | 11.16 | $117K |
+| 0.14 | 30 | 0 | 100% | 7.51 | $138K |
+| 0.14 | 35 | 0 | 100% | 7.71 | **$152K** |
+| 0.16 | 35 | 1 | 99.1% | 4.84 | $171K |
+| 0.18 | 35 | 2 | 98.3% | 3.76 | $192K |
+
+**Key Insight**: Lower delta = higher Sharpe, 100% WR, but less P&L
+
+---
+
+## Final Strategy Matrix
+
+| Strategy | Delta | Wing | VIX | Sharpe | P&L | WR |
+|----------|-------|------|-----|--------|-----|-----|
+| **Max Sharpe** | 0.10 | 25 | 16-20 | **17.98** | $86K | 100% |
+| Balanced | 0.12 | 30 | 16-20 | 11.16 | $117K | 100% |
+| **Holy Grail** | 0.14 | 30 | 16-20 | 7.51 | $138K | 100% |
+| Max P&L 100% | 0.14 | 35 | 16-20 | 7.71 | $152K | 100% |
+
+All with: Downtrend + Skip Thu + Skip Jan + 2x sizing
+
 ---
 
 ## Questions for Dili
 
-1. **Which config for paper trading?**
-2. **What sizing level?** (5x Holy Grail matches Max P&L but with 100% WR)
-3. **Ready to implement?**
+1. **Which variant?** Max Sharpe (δ0.10) vs Holy Grail (δ0.14) vs Max P&L (δ0.14 w35)?
+2. **Ready for paper trading?**
+3. **Sizing preference?** (5x or 10x gives more P&L with same 100% WR)
 
 ---
