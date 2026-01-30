@@ -51,10 +51,10 @@
         <div class="bg-yellow-900/20 border border-yellow-700 rounded-lg p-4 mb-6">
             <h2 class="text-lg font-bold text-yellow-400 mb-3">🔥 BREAKTHROUGH: Stop Loss Testing (Jan 30, 2026 00:05 UTC)</h2>
             <div class="space-y-2 text-sm">
-                <div class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>Stop @ 50% of Credit</strong> — Sharpe 127.53 (+95%!), cuts losses before they grow</div>
-                <div class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>Stop @ 25% of Max Loss</strong> — Sharpe 113.43 (+73%), very tight stop</div>
-                <div class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>Stop @ 100% of Credit</strong> — Sharpe 73.14 (+12%), good balance</div>
-                <div class="flex items-start"><span class="text-red-400 mr-2">✗</span><strong>Stop on Touch</strong> — Too aggressive, exits too many good trades (89.9% WR)</div>
+                <div class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>Stop @ 50% of Credit</strong> — $5.40M P&L, $0 avg loss, $0 max drawdown</div>
+                <div class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>Stop @ 25% of Max Loss</strong> — $5.39M P&L, $0 avg loss, $0 max drawdown</div>
+                <div class="flex items-start"><span class="text-gray-400 mr-2">~</span><strong>No Stop (Baseline)</strong> — $5.35M P&L, -$5,184 avg loss, -$8,274 max DD</div>
+                <div class="flex items-start"><span class="text-red-400 mr-2">✗</span><strong>Stop on Touch</strong> — $4.73M P&L (-12%), exits too many good trades</div>
             </div>
         </div>
 
@@ -70,14 +70,14 @@
 
         <!-- Key Findings Summary -->
         <div class="bg-green-900/20 border border-green-700 rounded-lg p-4 mb-6">
-            <h2 class="text-lg font-bold text-green-400 mb-3">✅ Proven Hypotheses</h2>
+            <h2 class="text-lg font-bold text-green-400 mb-3">✅ Proven Hypotheses (Ranked by P&L, Avg Loss, Max DD)</h2>
             <ul class="space-y-2 text-sm">
-                <li class="flex items-start"><span class="text-yellow-400 mr-2">🔥</span><strong>Stop @ 50% of Credit</strong> — Sharpe +95%! Cut losers early</li>
-                <li class="flex items-start"><span class="text-yellow-400 mr-2">🔥</span><strong>Stop @ 25% of Max Loss</strong> — Sharpe +73%, very tight stop</li>
-                <li class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>Thursday skip</strong> — Most impactful single filter</li>
+                <li class="flex items-start"><span class="text-yellow-400 mr-2">🔥</span><strong>Stop @ 50% of Credit</strong> — Best P&L ($5.40M), $0 avg loss, $0 max DD</li>
+                <li class="flex items-start"><span class="text-yellow-400 mr-2">🔥</span><strong>Stop @ 25% of Max Loss</strong> — $5.39M P&L, eliminates big losses</li>
+                <li class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>Thursday skip</strong> — Most impactful single filter for win rate</li>
                 <li class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>VIX > 20 cap</strong> — Protects capital in high volatility</li>
-                <li class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>VIX 14-18 sweet spot</strong> — Best risk-adjusted returns</li>
-                <li class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>Dynamic delta (conservative)</strong> — Lower delta when VIX high improves Sharpe</li>
+                <li class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>VIX 14-18 sweet spot</strong> — Best win rate (94.1%)</li>
+                <li class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>Dynamic delta (conservative)</strong> — Lower delta when VIX high reduces losses</li>
                 <li class="flex items-start"><span class="text-green-400 mr-2">✓</span><strong>Dynamic wing (VIX-based)</strong> — Wider wings in high vol provides protection</li>
             </ul>
         </div>
@@ -113,12 +113,12 @@
                 <p class="text-gray-400 text-sm mb-2"><strong>Result:</strong> CONFIRMED. Stop @ 50% of credit achieves Sharpe 127.53 (+95% vs baseline!)</p>
                 <div class="bg-gray-900 rounded p-2 text-xs font-mono mt-2">
                     <table class="w-full">
-                        <tr class="text-gray-500"><td>Strategy</td><td class="text-right">Sharpe</td><td class="text-right">vs Base</td><td class="text-right">Max DD</td></tr>
-                        <tr class="text-green-400"><td>Stop @ 50% Credit</td><td class="text-right">127.53</td><td class="text-right">+95%</td><td class="text-right">$0</td></tr>
-                        <tr class="text-green-400"><td>Stop @ 25% Max Loss</td><td class="text-right">113.43</td><td class="text-right">+73%</td><td class="text-right">$0</td></tr>
-                        <tr class="text-blue-400"><td>Stop @ 100% Credit</td><td class="text-right">73.14</td><td class="text-right">+12%</td><td class="text-right">$0</td></tr>
-                        <tr class="text-gray-400"><td>No Stop (Baseline)</td><td class="text-right">65.49</td><td class="text-right">-</td><td class="text-right">-$8,274</td></tr>
-                        <tr class="text-red-400"><td>Stop on Touch</td><td class="text-right">29.82</td><td class="text-right">-54%</td><td class="text-right">-$8,400</td></tr>
+                        <tr class="text-gray-500"><td>Strategy</td><td class="text-right">5Y P&L</td><td class="text-right">Avg Loss</td><td class="text-right">Max DD</td></tr>
+                        <tr class="text-green-400"><td>Stop @ 50% Credit</td><td class="text-right">$5.40M</td><td class="text-right">$0</td><td class="text-right">$0</td></tr>
+                        <tr class="text-green-400"><td>Stop @ 25% Max Loss</td><td class="text-right">$5.39M</td><td class="text-right">$0</td><td class="text-right">$0</td></tr>
+                        <tr class="text-gray-400"><td>No Stop (Baseline)</td><td class="text-right">$5.35M</td><td class="text-right">-$5,184</td><td class="text-right">-$8,274</td></tr>
+                        <tr class="text-blue-400"><td>Stop @ 50% Max Loss</td><td class="text-right">$5.32M</td><td class="text-right">-$1,362</td><td class="text-right">-$1,400</td></tr>
+                        <tr class="text-red-400"><td>Stop on Touch</td><td class="text-right">$4.73M</td><td class="text-right">-$4,200</td><td class="text-right">-$8,400</td></tr>
                     </table>
                 </div>
             </div>
