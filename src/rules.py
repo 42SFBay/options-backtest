@@ -444,6 +444,45 @@ def create_gap_filter_rules() -> RuleEngine:
     return engine
 
 
+def create_light_filter_rules() -> RuleEngine:
+    """
+    Light filtering: Only skip Thursday (found to underperform consistently).
+    Keep all VIX and gap days to maximize trade count.
+    Hypothesis: Skip Thursday alone gives best P&L vs Sharpe tradeoff.
+    """
+    engine = RuleEngine({
+        "delta": 0.15,
+        "delta_put": 0.15,
+        "delta_call": 0.15,
+        "wing_width": 30,
+        "dte": 2,
+        "profit_target_pct": 0.30,
+        "stop_loss_pct": 0.50,
+        "skip": False,
+    })
+    
+    # Only skip Thursdays
+    engine.add_rule(Rule(
+        name="skip_thursday",
+        conditions=[Condition("day_of_week", "==", "Thursday")],
+        params={"skip": True},
+        priority=100,
+    ))
+    
+    # Tight exits in calm conditions
+    engine.add_rule(Rule(
+        name="calm_market",
+        conditions=[
+            Condition("vix", "<", 18),
+            Condition("gap", "<", 0.3),
+        ],
+        params={"profit_target_pct": 0.15, "stop_loss_pct": 0.15},
+        priority=50,
+    ))
+    
+    return engine
+
+
 def create_combined_adaptive_rules() -> RuleEngine:
     """
     Combines VIX, momentum, gap, and day-of-week into a comprehensive rule set.
@@ -548,6 +587,7 @@ RULE_SETS = {
     "momentum": ("Delta asymmetry based on momentum", create_momentum_adaptive_rules),
     "gap_filter": ("PT/SL based on overnight gap", create_gap_filter_rules),
     "combined": ("VIX + momentum + gap + day-of-week", create_combined_adaptive_rules),
+    "light_filter": ("Only skip Thursday (max P&L focus)", create_light_filter_rules),
 }
 
 
