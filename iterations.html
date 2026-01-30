@@ -85,11 +85,12 @@
         <div class="bg-red-900/20 border border-red-700 rounded-lg p-4 mb-6">
             <h2 class="text-lg font-bold text-red-400 mb-3">❌ Rejected Hypotheses</h2>
             <ul class="space-y-2 text-sm">
+                <li class="flex items-start"><span class="text-red-400 mr-2">✗</span><strong>Profit Targets</strong> — PT 90% loses 7% P&L, PT 50% loses 37% (leave money on table)</li>
+                <li class="flex items-start"><span class="text-red-400 mr-2">✗</span><strong>Consecutive Loss Rules</strong> — No impact (losses don't cluster enough)</li>
+                <li class="flex items-start"><span class="text-red-400 mr-2">✗</span><strong>VIX 14-18 Sweet Spot</strong> — Too restrictive, reduces P&L despite higher WR</li>
                 <li class="flex items-start"><span class="text-red-400 mr-2">✗</span><strong>Stop on Touch</strong> — Too aggressive, exits 10% of good trades early</li>
                 <li class="flex items-start"><span class="text-red-400 mr-2">✗</span><strong>Dynamic Delta Aggressive</strong> — Higher delta in high VIX = more losses</li>
-                <li class="flex items-start"><span class="text-red-400 mr-2">✗</span><strong>Gap filter > 0.5%</strong> — Too restrictive, missed good trades</li>
-                <li class="flex items-start"><span class="text-red-400 mr-2">✗</span><strong>5d momentum < -5%</strong> — Threshold too low, no improvement</li>
-                <li class="flex items-start"><span class="text-red-400 mr-2">✗</span><strong>Monday skip</strong> — No significant improvement</li>
+                <li class="flex items-start"><span class="text-red-400 mr-2">✗</span><strong>Gap filter < 0.5%</strong> — Too restrictive, missed good trades</li>
             </ul>
         </div>
 
@@ -97,6 +98,31 @@
         <h2 class="text-xl font-bold mb-4">📜 Iteration Timeline</h2>
         
         <div class="space-y-4">
+            <!-- Iteration 32: PT, Consecutive Loss, Filters -->
+            <div class="bg-gray-800 rounded-lg p-4 border-l-4 border-blue-500">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-blue-400 font-bold">Iteration 32 — PROFIT TARGETS, LOSS RULES, FILTERS</span>
+                    <span class="text-gray-500 text-sm">Jan 30, 2026 00:16 UTC</span>
+                </div>
+                <div class="text-sm mb-2">
+                    <span class="bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-xs mr-2">Profit Target</span>
+                    <span class="bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-xs mr-2">Consec Loss</span>
+                    <span class="bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-xs">Filters</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2"><strong>Hypothesis:</strong> Profit targets, consecutive loss rules, and additional filters improve P&L</p>
+                <p class="text-gray-400 text-sm mb-2"><strong>Result:</strong> MIXED. Profit targets HURT P&L. Consecutive loss rules have no impact. Most filters reduce P&L.</p>
+                <div class="bg-gray-900 rounded p-2 text-xs font-mono mt-2">
+                    <table class="w-full">
+                        <tr class="text-gray-500"><td>Strategy</td><td class="text-right">5Y P&L</td><td class="text-right">Avg Loss</td><td class="text-right">Impact</td></tr>
+                        <tr class="text-green-400"><td>Baseline + SL 50%</td><td class="text-right">$5.40M</td><td class="text-right">$0</td><td class="text-right">Best</td></tr>
+                        <tr class="text-gray-400"><td>Baseline (no stop)</td><td class="text-right">$5.35M</td><td class="text-right">-$5,184</td><td class="text-right">-</td></tr>
+                        <tr class="text-red-400"><td>PT 90% + SL 50%</td><td class="text-right">$5.00M</td><td class="text-right">$0</td><td class="text-right">-7%</td></tr>
+                        <tr class="text-red-400"><td>PT 50% + SL 50%</td><td class="text-right">$3.41M</td><td class="text-right">$0</td><td class="text-right">-37%</td></tr>
+                        <tr class="text-yellow-400"><td>Consec Loss Rules</td><td class="text-right">$5.35M</td><td class="text-right">-$5,184</td><td class="text-right">No effect</td></tr>
+                    </table>
+                </div>
+            </div>
+
             <!-- Iteration 31: Stop Loss -->
             <div class="bg-gray-800 rounded-lg p-4 border-l-4 border-yellow-500">
                 <div class="flex justify-between items-start mb-2">
