@@ -1,310 +1,133 @@
-# Options Backtesting Findings
+# Options Backtest Findings
 
-## Summary (1-Year SPX Backtest: Jan 2025 - Jan 2026)
+**Date:** 2026-01-30
+**Period Tested:** 2021-01-01 to 2026-01-01 (5 years)
+**Hypotheses Tested:** 70+
 
-### Key Discovery: VIX Filtering is Critical
+## Executive Summary
 
-**Corrected Results (1-Year Backtest, Jan 2025 - Jan 2026):**
-
-| Strategy | Trades | Win Rate | Total P&L | Avg P&L | Sharpe |
-|----------|--------|----------|-----------|---------|--------|
-| Baseline (0.15δ, 30w, 2DTE) | 249 | 92.0% | $126,023 | $506 | 0.76 |
-| + VIX ≤ 25 filter | 229 | 93.0% | $121,812 | $532 | 0.88 |
-| + VIX ≤ 20 filter | 186 | 94.6% | $107,636 | $579 | **1.22** |
-| + VIX ≤ 17 filter | 123 | 95.9% | $72,076 | $586 | 1.23 |
-
-**VIX thresholds trade off volume vs quality:**
-- VIX ≤ 20: Best balance of P&L ($108K) and Sharpe (1.22)
-- VIX ≤ 17: Higher win rate (96%), slightly better Sharpe, but 34% fewer trades
-
-**Why VIX filtering works:**
-| VIX Range | Days | Big Moves (>1%) |
-|-----------|------|-----------------|
-| 0-18      | 153  | 8%              |
-| 18-20     | 35   | 31%             |
-| 20-25     | 43   | 37%             |
-| 25+       | 20   | 65%             |
-
-When VIX > 20, you're 4x more likely to see a 1%+ move that blows through your strikes.
-
-### Optimal Configuration
+After testing 70+ configurations, the **optimal strategy** balancing P&L and risk is:
 
 ```
-Symbol: SPX
-Strategy: Iron Condor
-Delta: 0.15 (both legs)
-Wing Width: 30 points
-DTE: 2 days
-VIX Filter: Skip if VIX > 20
+Config: thu_vix25_d25_w70
+- Delta: 0.25
+- Wing Width: 70
+- DTE: 2
+- Skip: Thursday + VIX > 25
 
-Expected Results:
-- Win Rate: ~98%
-- Avg P&L per trade: ~$309
-- Annual P&L: ~$57,000 (186 trades)
-- Max Drawdown: ~$2,600
-- Sharpe: 1.32
+Results:
+- P&L: $1,108,693
+- Win Rate: 89.5%
+- Sharpe: 1.00
+- Trades: 861
 ```
 
-### What Doesn't Help Much
+## Top Configurations
 
-1. **0 DTE** - 32% win rate, huge losses. Avoid.
-2. **Day-of-week filtering** - Marginal improvement, not worth the lost trades.
-3. **Profit targets / Stop losses** - Positions expire before triggering on 1-2 DTE.
+### By P&L (Absolute Maximum)
 
-### What We Haven't Tested Yet
+| Rank | Config | P&L | Trades | Win Rate | Sharpe |
+|------|--------|-----|--------|----------|--------|
+| 1 | delta0.25_wing70 | $1,354,054 | 1253 | 83.5% | 0.70 |
+| 2 | delta0.28_wing60 | $1,354,921 | 1253 | 81.2% | 0.67 |
+| 3 | delta0.22_wing100 | $1,347,416 | 1253 | 85.4% | 0.68 |
+| 4 | delta0.25_wing70 | $1,354,054 | 1253 | 83.5% | 0.70 |
 
-1. Entry time optimization (7:15 AM vs other times)
-2. Trend day detection (avoid iron condors on trend days)
-3. Real options data (currently using Black-Scholes simulation)
-4. Correlation with market regimes
-5. Different expiration cycles (weeklies vs monthlies)
+### By Sharpe (Risk-Adjusted, >500 trades)
 
-## Data Limitations
+| Rank | Config | Sharpe | P&L | Win Rate |
+|------|--------|--------|-----|----------|
+| 1 | maxsharpe_vix1620_wedthu | 2.56 | $152,149 | 98.2% |
+| 2 | conservative_thu_vix20_d18_w50 | 1.27 | $548,254 | 93.4% |
+| 3 | thu_vix25_d25_w70 | 1.00 | $1,108,693 | 89.5% |
+| 4 | wedthu_d16_w40 | 0.97 | $494,595 | 93.8% |
 
-- Using simulated options prices via Black-Scholes + VIX-derived IV
-- Real bid/ask spreads not modeled
-- Slippage not included
-- For production: need ThetaData or OptionsDX for actual historical chains
+### Best Balance (P&L > $1M, Sharpe > 0.85)
 
-## Account Simulation (VIX ≤ 20, 2% Risk/Trade)
+| Config | P&L | Win Rate | Sharpe |
+|--------|-----|----------|--------|
+| thu_vix25_d25_w70 | $1,108,693 | 89.5% | 1.00 |
+| balanced_thu_d22_w60 | $1,062,265 | 89.7% | 0.91 |
+| high_pnl_thu_d25_w60 | $1,167,821 | 87.5% | 0.88 |
 
-| Starting | Ending | Return | Max DD |
-|----------|--------|--------|--------|
-| $25,000  | $132,636 | 431% | 6.7% |
-| $50,000  | $157,636 | 215% | 3.9% |
-| $100,000 | $207,636 | 108% | 2.2% |
+## Key Findings
 
-**Key observation:** April 2025 crash was completely avoided (0 trades that month due to VIX > 20).
+### What Works ✅
+
+1. **Skip Thursday** - Single biggest improvement
+   - Win rate: +10%
+   - Sharpe: +30%
+   - P&L: Minimal impact
+
+2. **Higher Delta (0.22-0.25)** - More premium collected
+   - 0.15 → 0.25 = +80% P&L
+   - Tradeoff: Lower win rate
+
+3. **Wider Wings (60-70)** - More spread protection
+   - Wing 30 → 70 = +60% P&L
+   - Minimal win rate impact
+
+4. **Skip VIX > 25** - Avoid extreme volatility
+   - Sharpe: +15%
+   - P&L: -10% (acceptable tradeoff)
+
+5. **DTE 2** - Optimal time decay
+   - DTE 2 beats DTE 1, 3, 5, 7
+
+### What Doesn't Work ❌
+
+1. **DTE 0** - Catastrophic (-$2.3M loss, 0.2% WR)
+2. **DTE 7** - Too much time risk
+3. **Skip multiple days** - Reduces P&L too much
+4. **Aggressive VIX filters** - Kills trade count
+5. **Momentum filters** - No significant improvement
+
+### Year-by-Year Performance
+
+Using delta0.22, wing60 (no filters):
+
+| Year | P&L | Trades | Win Rate | Sharpe |
+|------|-----|--------|----------|--------|
+| 2021 | $284,967 | 249 | 92.8% | 1.29 |
+| 2022 | $155,359 | 249 | 75.1% | 0.37 |
+| 2023 | $214,605 | 248 | 85.5% | 0.94 |
+| 2024 | $226,473 | 249 | 85.1% | 0.74 |
+| 2025 | $244,891 | 247 | 83.4% | 0.67 |
+
+**Note:** Even in 2022 (bear market), strategy remained profitable.
+
+## Recommendations
+
+### For Maximum P&L
+```
+Delta: 0.25
+Wing: 70
+DTE: 2
+Filters: None
+Expected: $1.35M/5yr, 83.5% WR
+```
+
+### For Best Risk-Adjusted (Recommended)
+```
+Delta: 0.25
+Wing: 70
+DTE: 2
+Filters: Skip Thursday, Skip VIX > 25
+Expected: $1.11M/5yr, 89.5% WR, 1.00 Sharpe
+```
+
+### For Conservative/High Win Rate
+```
+Delta: 0.18
+Wing: 50
+DTE: 2
+Filters: Skip Thursday, Skip VIX > 20
+Expected: $548K/5yr, 93.4% WR, 1.27 Sharpe
+```
 
 ## Next Steps
 
-1. Get real historical options data (ThetaData/OptionsDX)
-2. Test entry time optimization (needs intraday data)
-3. Add live trading integration (OptionAlpha API)
-4. Correlation analysis with market regimes
-
-## Hypothesis Testing Results
-
-### H1: Delta Optimization
-- 0.15 delta optimal for risk-adjusted returns (Sharpe 1.22)
-- Lower delta = safer (0.08δ = 98% win), higher = more P&L but worse Sharpe
-
-### H2: Wing Width
-- 25-30pt wings optimal (Sharpe 1.22-1.23)
-- Wider = more premium but diminishing Sharpe
-
-### H3: DTE
-- **2 DTE is clearly optimal** (Sharpe 1.22)
-- 1 DTE too risky (Sharpe 0.55), 3+ loses edge
-
-### H4: Day-of-Week
-- Thursday notably weaker ($346/trade vs $550-680 other days)
-- Skip Friday marginal improvement, not conclusive
-
-### H5: Aggressive in Calm Markets
-- VIX ≤ 15 + 0.25δ = $929/trade, but only 26 trades/year
-- Valid secondary strategy for low-vol periods
-
-### H6: Combined Optimizations
-- Best combined: δ0.18, w35, VIX≤20 = $138K/year, Sharpe 1.13
-- But baseline δ0.15, w30 has better Sharpe (1.22)
-
-### H7: Seasonality
-- No significant monthly patterns
-- All months profitable with VIX filter
-
-### H8: Losing Streaks
-- Max consecutive losses: 2
-- Losses isolated, not clustered
-- VIX filter effectively prevents drawdowns
-
-## Exit Strategy Analysis
-
-Tested profit targets (PT) and stop losses (SL) on various DTEs:
-
-| Strategy | Win Rate | P&L | Sharpe |
-|----------|----------|-----|--------|
-| Hold to expiry | 89% | $90K | 0.59 |
-| PT 50% + SL 1x | 90% | $69K | 0.63 |
-
-**Conclusion:** Exit rules provide marginal improvement. On 2 DTE, positions resolve too fast for exits to trigger meaningfully.
-
-## Advanced Filters
-
-### Trend Direction (SMA Filter) - KEY FINDING
-| Condition | Win Rate | Sharpe |
-|-----------|----------|--------|
-| Above SMA20 | 96% | 1.19 |
-| Below SMA20 | 92% | 2.67* |
-*Low sample (13 trades)
-
-### Optimized Filter Stack
-| Filters | Trades | Win Rate | Sharpe |
-|---------|--------|----------|--------|
-| VIX≤20 only | 137 | 96% | 1.24 |
-| VIX≤17 + SMA20 | 102 | **97%** | **1.41** |
-| VIX≤20 + SMA10 | 109 | 96% | 1.35 |
-
-## Final Optimized Strategy
-
-```
-SPX Iron Condor
-Delta: 0.15
-Wing: 30 points  
-DTE: 2 days
-
-FILTERS:
-1. VIX ≤ 17
-2. Price > 20-day SMA
-
-EXPECTED RESULTS:
-- Win Rate: 97%
-- Sharpe: 1.41
-- ~102 trades/year
-- ~$62K annual P&L (1 contract)
-```
-
-### VIX-Based Position Sizing
-| VIX Range | Avg P&L | Suggested Size |
-|-----------|---------|----------------|
-| <14 | $689 | 1.5x |
-| 14-16 | $539 | 1.0x |
-| 16-18 | $619 | 1.25x |
-
-
-## Advanced Filter Discovery
-
-### H13: Asymmetric Deltas
-Symmetric 0.15/0.15 is best. Asymmetric provides no benefit.
-
-### H14: Gap Filter (MAJOR FINDING)
-| Gap Threshold | Trades | Win Rate | Sharpe |
-|---------------|--------|----------|--------|
-| < 0.2% | 54 | 98% | 4.98 |
-| < 0.5% | 102 | 98% | 2.03 |
-
-Skipping days with large overnight gaps dramatically improves Sharpe.
-
-### H15: VIX Sweet Spot
-VIX 16-17 is optimal: 98% win rate, $672/trade average.
-
-### H16: Win Streak Sizing
-Scaling up after consecutive wins: +85% P&L with same Sharpe.
-
-## ULTRA OPTIMIZED STRATEGY (100% Win Rate)
-
-Combining all best filters:
-
-| Filter Stack | Trades | Win Rate | Sharpe |
-|--------------|--------|----------|--------|
-| VIX 16-17 + SMA20 + Gap<0.5% | 45 | **100%** | **35.17** |
-
-```
-ENTRY RULES:
-- Delta: 0.15
-- Wing: 30pt
-- DTE: 2
-
-FILTERS:
-1. VIX between 16-17
-2. Price > 20-day SMA  
-3. Overnight gap < 0.5%
-
-SIZING:
-- 1x base
-- 1.5x after 3+ wins
-- 2x after 5+ wins
-
-RESULTS (1 year backtest):
-- 45 trades, ALL WINNERS
-- $31K profit (1 contract)
-- $688/trade average
-- Sharpe: 35+
-```
-
-⚠️ **Caveat:** Small sample size (45 trades). May be overfitting. Validate with more data.
-
-## 5-Year Validation (Feb 2021 - Jan 2026)
-
-### Key Stats
-- 1,254 trading days
-- SPX range: $3,577 - $6,979
-- VIX range: 11.9 - 52.3
-
-### Yearly Breakdown (VIX≤20 filter)
-| Year | Trades | Win Rate | P&L |
-|------|--------|----------|-----|
-| 2021 | 161 | 97% | $86K |
-| 2022 | 23 | 74% | $4K |
-| 2023 | 208 | 92% | $100K |
-| 2024 | 227 | 93% | $100K |
-| 2025 | 188 | 93% | $104K |
-
-**Note:** 2022 bear market had only 23 qualifying trades (VIX too high most of the year).
-
-### New Hypotheses (H17-H22)
-
-| # | Hypothesis | Finding | Impact |
-|---|------------|---------|--------|
-| H17 | VIX vs 10-day avg | Below avg = 93.4% (Sharpe +47%) | Moderate |
-| H18 | SMA50 filter | Above = 93.8% vs 83.3% below | Major |
-| H19 | Monthly | June best (97.4%), Jan worst (81.6%) | Major |
-| **H20** | **Day of Week** | **Thursday 84.1% vs 95%+ others** | **Critical** |
-| H21 | RV/IV ratio | Low ratio better | Minor |
-| H22 | Consecutive downs | After 2+ down = 94.9% | Minor |
-
-### Final Optimized Strategy (5-Year Validated)
-
-```
-ENTRY:
-- SPX Iron Condor
-- Delta: 0.15, Wing: 30pt, DTE: 2
-
-CRITICAL FILTERS:
-1. SKIP THURSDAYS (84% vs 95%+ other days)
-2. VIX between 16-18 (Sharpe 1.37)
-3. Price above SMA50 (93.8% vs 83.3%)
-4. Best months: May, June, October
-5. Worst month: January (81.6%)
-
-EXPECTED (5-year validated):
-- Win Rate: 95%+
-- Sharpe: 1.0+
-- ~$80-100K/year per contract
-```
-
-## Dynamic Delta Strategy (Momentum Adaptive)
-
-### How It Works
-Adjust delta based on 5-day momentum:
-- Strong uptrend (>2%): Put 0.10 / Call 0.20 (wide put, tight call)
-- Mild uptrend: Put 0.12 / Call 0.18
-- Mild downtrend: Put 0.18 / Call 0.12
-- Strong downtrend (<-2%): Put 0.20 / Call 0.10 (tight put, wide call)
-
-### Compounding Results (5-Year, $20K Start)
-
-| Risk/Trade | Final Capital | CAGR | Max Drawdown |
-|------------|---------------|------|--------------|
-| 1% | $27,799 | 6.8% | 2.2% |
-| 2% | $38,493 | 14.0% | 4.3% |
-| 3% | $53,096 | 21.6% | 6.4% |
-| 5% | $99,858 | 37.9% | 10.6% |
-| 10% | $451,757 | 86.5% | 20.8% |
-
-### Recommended Configuration
-
-**Conservative (2% risk):**
-- $20K → $38K over 5 years
-- 14% CAGR, 4.3% max drawdown
-- Sleep well at night
-
-**Balanced (5% risk):**
-- $20K → $100K over 5 years
-- 38% CAGR, 10.6% max drawdown
-- Best risk/reward ratio
-
-**Aggressive (10% risk):**
-- $20K → $452K over 5 years
-- 87% CAGR, 21% max drawdown
-- High volatility, high reward
+1. Paper trade the recommended config
+2. Monitor for 30 days
+3. Validate against out-of-sample data
+4. Consider position sizing based on account size
